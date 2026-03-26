@@ -71,6 +71,9 @@ const ProductsFiltersSidebar: React.FC<ProductsFiltersSidebarProps> = ({
   setRegion,
   onClearFilters,
 }) => {
+  // Defensive checks for tags array
+  const safeTags = Array.isArray(tags) ? tags : [];
+
   return (
     <aside className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-28">
       <h3 className="text-lg font-bold text-green-900 mb-4">Filters</h3>
@@ -115,11 +118,11 @@ const ProductsFiltersSidebar: React.FC<ProductsFiltersSidebarProps> = ({
             <button
               key={tag}
               type="button"
-              className={`px-2 py-1 rounded-full text-xs font-semibold border ${tags.includes(tag) ? 'bg-orange-100 text-orange-700 border-orange-200' : 'bg-gray-100 text-gray-600 border-gray-200'}`}
+              className={`px-2 py-1 rounded-full text-xs font-semibold border ${safeTags.includes(tag) ? 'bg-orange-100 text-orange-700 border-orange-200' : 'bg-gray-100 text-gray-600 border-gray-200'}`}
               onClick={() =>
-                tags.includes(tag)
-                  ? setTags(tags.filter((t) => t !== tag))
-                  : setTags([...tags, tag])
+                safeTags.includes(tag)
+                  ? setTags(safeTags.filter((t) => t !== tag))
+                  : setTags([...safeTags, tag])
               }
             >
               {tag}

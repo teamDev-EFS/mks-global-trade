@@ -1,45 +1,36 @@
 import React from 'react';
-import { CheckCircle, Globe, Package, Clock } from 'lucide-react';
+import { highlights } from '../../data/highlights';
+import { Globe, CheckCircle, Package, Clock } from 'lucide-react';
+import Card from '../ui/Card';
 
-const highlights = [
-  {
-    icon: <Globe className="w-7 h-7 text-green-700" />,
-    title: 'Global Export Network',
-    desc: 'Expanding our reach to over 50 countries.'
-  },
-  {
-    icon: <CheckCircle className="w-7 h-7 text-green-700" />,
-    title: 'Quality Assurance',
-    desc: 'Ensuring top-notch quality for all products.'
-  },
-  {
-    icon: <Package className="w-7 h-7 text-green-700" />,
-    title: 'Bulk Supply Capability',
-    desc: 'Handling large orders with ease.'
-  },
-  {
-    icon: <Clock className="w-7 h-7 text-green-700" />,
-    title: 'Timely Delivery',
-    desc: 'On-time delivery for every order.'
-  },
-];
+const iconMap = {
+  Globe: Globe,
+  CheckCircle: CheckCircle,
+  Package: Package,
+  Clock: Clock,
+};
 
 const HighlightsSection: React.FC = () => {
   return (
-    <section className="bg-[#F8F6F3] py-12 border-b border-gray-100">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {highlights.map((item, idx) => (
-            <div
-              key={idx}
-              className="flex flex-col items-center text-center bg-white rounded-xl shadow-sm border border-gray-100 px-6 py-8 hover:shadow-md transition-all"
+    <section className="max-w-[1240px] mx-auto px-6 sm:px-10 py-16 bg-ivory-50">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+        {highlights.map(({ id, title, description, icon }) => {
+          const IconComponent = iconMap[icon as keyof typeof iconMap];
+          return (
+            <Card
+              key={id}
+              className="flex flex-col items-center text-center p-8 bg-gradient-to-tr from-ivory-50 to-ivory-100 border-ivory-300 shadow-md hover:shadow-xl transition-shadow"
             >
-              <div className="mb-3">{item.icon}</div>
-              <h3 className="text-lg font-bold text-green-900 mb-1">{item.title}</h3>
-              <p className="text-gray-500 text-sm">{item.desc}</p>
-            </div>
-          ))}
-        </div>
+              <div className="bg-emerald-900 bg-opacity-10 rounded-full p-4 mb-4">
+                <IconComponent className="w-10 h-10 text-emerald-800" />
+              </div>
+              <h3 className="text-xl font-semibold text-emerald-900 mb-2">{title}</h3>
+              <p className="text-ivory-700 text-sm leading-relaxed max-w-xs">
+                {description}
+              </p>
+            </Card>
+          );
+        })}
       </div>
     </section>
   );
