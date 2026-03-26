@@ -7,7 +7,13 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ children, className }) => {
   return (
-    <div className={`bg-white shadow-lg rounded-2xl p-8 border border-gray-300 ${className} transition-transform transform hover:scale-105 hover:shadow-xl`}>      {children}
+    <div
+      className={`bg-ivory-50 border border-ivory-200 rounded-[20px] p-8 shadow-md transition-shadow hover:shadow-xl ${className}`}
+      style={{
+        backgroundImage: 'radial-gradient(circle at top left, rgba(255 255 255 / 0.5), transparent)',
+      }}
+    >
+      {children}
     </div>
   );
 };

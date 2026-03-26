@@ -6,11 +6,13 @@ import CTABanner from '../components/home/CTABanner';
 
 const Home: React.FC = () => {
   return (
-    <div className="bg-gradient-to-b from-white to-gray-100 min-h-screen">
-      <HeroSection />
-      <HighlightsSection />
-      <FeaturedProducts />
-      <CTABanner />
+    <div className="bg-ivory-50 min-h-screen">
+      <div className="max-w-[1240px] mx-auto px-6 sm:px-10 py-12">
+        <HeroSection />
+        <HighlightsSection />
+        <FeaturedProducts />
+        <CTABanner />
+      </div>
     </div>
   );
 };

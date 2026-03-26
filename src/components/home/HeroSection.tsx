@@ -1,53 +1,64 @@
 import React from 'react';
-import { Globe, ArrowRight } from 'lucide-react';
+import Button from '../ui/Button';
+import { Globe, CheckCircle, Package } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative bg-gradient-to-br from-green-700 via-emerald-600 to-green-900 min-h-[520px] flex items-center overflow-hidden">
-      {/* Organic overlay texture */}
-      <div className="absolute inset-0 bg-[url('/organic-texture.png')] bg-repeat opacity-10 pointer-events-none" />
-      <div className="max-w-[1320px] mx-auto w-full px-4 sm:px-8 flex flex-col md:flex-row items-center justify-between py-20 md:py-28 relative z-10">
-        {/* Left: Content */}
-        <div className="flex-1 text-left">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 drop-shadow-lg">
-            Global Trade Solutions for <span className="text-orange-400">Natural & Agro Products</span>
+    <section className="relative bg-gradient-to-br from-emerald-800 to-green-900 rounded-3xl shadow-lg overflow-hidden">
+      <div className="max-w-[1240px] mx-auto px-6 sm:px-10 py-20 flex flex-col lg:flex-row items-center gap-12">
+        {/* Left: Text + CTA */}
+        <div className="flex-1 text-ivory-50">
+          <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight tracking-tight mb-6">
+            Premium Global Export Solutions
           </h1>
-          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-xl">
-            Connecting you with the finest export-quality agro products worldwide. Trusted by importers, wholesalers, and food businesses in 50+ countries.
+          <p className="text-lg sm:text-xl max-w-xl mb-8 opacity-90">
+            Trusted partner for quality products, bulk supply, and worldwide reach.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold bg-orange-500 text-white shadow-lg hover:bg-orange-600 transition-all text-lg group"
-            >
+          <div className="flex flex-wrap gap-4">
+            <Button className="px-8 py-4 text-lg font-semibold shadow-lg" as="a" href="/contact">
               Get a Quote
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold border-2 border-white text-white hover:bg-white/10 hover:text-orange-400 transition-all text-lg"
-            >
-              Contact Us
-            </a>
+            </Button>
+            <Button variant="secondary" className="px-8 py-4 text-lg font-semibold">
+              Explore Products
+            </Button>
           </div>
-        </div>
-        {/* Right: Product collage or world map */}
-        <div className="flex-1 flex justify-center items-center mt-12 md:mt-0">
-          <div className="relative w-[340px] h-[340px] md:w-[420px] md:h-[420px]">
-            <img
-              src="/hero-world-map.png"
-              alt="Global Export Map"
-              className="absolute inset-0 w-full h-full object-contain opacity-90 drop-shadow-xl rounded-2xl border-4 border-white"
-              loading="lazy"
-            />
-            {/* Example export lines or product icons could be added here for more visual appeal */}
-            <div className="absolute bottom-4 left-4 flex items-center bg-white/90 rounded-lg px-4 py-2 shadow-lg">
-              <Globe className="w-6 h-6 text-green-700 mr-2" />
-              <span className="font-semibold text-green-800">50+ Countries Served</span>
+          {/* Trust indicators */}
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <div className="flex items-center gap-4">
+              <Globe className="w-8 h-8 text-orange-400" />
+              <div>
+                <h3 className="font-semibold text-lg">Global Reach</h3>
+                <p className="text-sm opacity-90">Serving 50+ countries worldwide</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <CheckCircle className="w-8 h-8 text-orange-400" />
+              <div>
+                <h3 className="font-semibold text-lg">Export Quality</h3>
+                <p className="text-sm opacity-90">Certified premium products</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <Package className="w-8 h-8 text-orange-400" />
+              <div>
+                <h3 className="font-semibold text-lg">Bulk Supply</h3>
+                <p className="text-sm opacity-90">Reliable large order fulfillment</p>
+              </div>
             </div>
           </div>
         </div>
+        {/* Right: Visual */}
+        <div className="flex-1 max-w-lg lg:max-w-xl">
+          <img
+            src="/images/world-export-map.png"
+            alt="Global export map"
+            className="w-full rounded-3xl shadow-2xl object-cover hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+        </div>
       </div>
+      {/* Subtle textured overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-emerald-900/20 to-transparent mix-blend-overlay"></div>
     </section>
   );
 };
