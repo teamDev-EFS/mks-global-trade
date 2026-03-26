@@ -15,17 +15,17 @@ const Navbar: React.FC = () => {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 shadow-sm">
-      <nav className="max-w-[1320px] mx-auto px-4 sm:px-8 flex items-center justify-between h-20">
+    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 shadow-md">
+      <nav className="max-w-[1240px] mx-auto px-6 sm:px-10 flex items-center justify-between h-20">
         <Link to="/" className="flex items-center text-2xl font-extrabold text-green-800 tracking-tight">
           <span className="bg-gradient-to-r from-green-700 to-emerald-500 bg-clip-text text-transparent">MSK Global Trade</span>
         </Link>
-        <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
+        <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
           {navLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className={`relative px-3 py-2 font-medium text-gray-700 hover:text-green-800 transition-colors duration-200 ${location.pathname.startsWith(link.to) ? 'text-green-800' : ''}`}
+              className={`relative px-4 py-2 font-medium text-gray-700 hover:text-green-800 transition-colors duration-200 ${location.pathname.startsWith(link.to) ? 'text-green-800' : ''}`}
             >
               <span className="inline-block">
                 {link.label}
@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
           ))}
           <Link
             to="/contact"
-            className="ml-4 px-5 py-2 rounded-full font-semibold bg-orange-500 text-white shadow-md hover:bg-orange-600 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-orange-400"
+            className="ml-4 px-6 py-2 rounded-full font-semibold bg-orange-500 text-white shadow-lg hover:bg-orange-600 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-orange-400"
           >
             Get Quote
           </Link>
