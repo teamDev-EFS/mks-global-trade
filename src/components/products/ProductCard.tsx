@@ -5,7 +5,7 @@ import Card from '../ui/Card';
 import ProductEnquiryModal from './ProductEnquiryModal';
 
 const WhatsAppIcon = () => (
-  <svg viewBox="0 0 32 32" className="w-5 h-5 fill-green-500" aria-hidden="true" focusable="false">
+  <svg viewBox="0 0 32 32" className="w-5 h-5 fill-green-600" aria-hidden="true" focusable="false">
     <path d="M16 .4C7.5.4.4 7.5.4 16c0 2.8.7 5.4 2.1 7.7L0 32l8.6-2.5c2.2 1.2 4.7 1.9 7.4 1.9 8.5 0 15.6-7.1 15.6-15.6S24.5.4 16 .4zm0 28.6c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-5.1 1.5 1.4-5-.3-.5C3.6 20.7 3 18.4 3 16 3 8.8 8.8 3 16 3s13 5.8 13 13-5.8 13-13 13zm7.2-9.8c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.7-.2-1 .2-.3.4-1.1 1.3-1.3 1.5-.2.2-.5.3-.9.1-.4-.2-1.6-.6-3-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8.2-.2.4-.5.6-.7.2-.2.3-.4.5-.7.2-.3.1-.6 0-.8-.1-.2-1-2.4-1.4-3.3-.4-.9-.8-.8-1-.8h-.9c-.3 0-.8.1-1.2.6-.4.4-1.6 1.6-1.6 3.9s1.7 4.6 1.9 4.9c.2.3 3.4 5.1 8.2 7.1 1.1.5 2 .8 2.7 1 .9.3 1.7.3 2.3.2.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.4-.3-.8-.5z"/>
   </svg>
 );
@@ -21,7 +21,9 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], addProduct, removeProduct, openQuickView }) => {
   const [enquiryOpen, setEnquiryOpen] = useState(false);
 
-  const isInInquiryList = inquiryList?.some ? inquiryList.some((p) => p.id === product.id) : false;
+  // Defensive check for inquiryList
+  const safeInquiryList = Array.isArray(inquiryList) ? inquiryList : [];
+  const isInInquiryList = safeInquiryList.some((p) => p.id === product.id);
 
   // Compose WhatsApp message for enquiry modal
   const composeMessage = (userDetails: { name: string; email: string; phone: string; quantity: string; location: string; message: string }) => {
@@ -36,10 +38,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], ad
 
   const handleWhatsAppEnquiry = (userDetails: { name: string; email: string; phone: string; quantity: string; location: string; message: string }) => {
     const message = composeMessage(userDetails);
-    const whatsappUrl = `https://wa.me/919232091060?text=${message}`;
+    const whatsappUrl = `https://wa.me/919232091060?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     setEnquiryOpen(false);
   };
+
+  // Fix product image association: use product.image if defined, else fallback to a safe default
+  const productImage = product.image || `/images/products/${product.name.toLowerCase().replace(/\s+/g, '-')}.jpg`;
 
   return (
     <Card className="flex flex-col hover:shadow-xl transition-shadow rounded-[20px] overflow-hidden">
@@ -48,7 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], ad
         onClick={() => openQuickView && openQuickView(product)}
       >
         <img
-          src={product.image}
+          src={productImage}
           alt={product.name}
           className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"

@@ -3,16 +3,16 @@ import React from 'react';
 interface ProductsFiltersSidebarProps {
   search: string;
   setSearch: (v: string) => void;
-  category: string;
-  setCategory: (v: string) => void;
-  variant: string;
-  setVariant: (v: string) => void;
+  category: string | null;
+  setCategory: (v: string | null) => void;
+  variant: string | null;
+  setVariant: (v: string | null) => void;
   tags: string[];
   setTags: (tags: string[]) => void;
-  availability: string;
-  setAvailability: (v: string) => void;
-  region: string;
-  setRegion: (v: string) => void;
+  availability: string | null;
+  setAvailability: (v: string | null) => void;
+  region: string | null;
+  setRegion: (v: string | null) => void;
   onClearFilters: () => void;
 }
 
@@ -74,6 +74,12 @@ const ProductsFiltersSidebar: React.FC<ProductsFiltersSidebarProps> = ({
   // Defensive checks for tags array
   const safeTags = Array.isArray(tags) ? tags : [];
 
+  // Defensive for category, variant, availability, region to handle 'All' or '' as null
+  const selectedCategory = category === 'All' ? null : category;
+  const selectedVariant = variant === '' ? null : variant;
+  const selectedAvailability = availability === '' ? null : availability;
+  const selectedRegion = region === '' ? null : region;
+
   return (
     <aside className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-28">
       <h3 className="text-lg font-bold text-green-900 mb-4">Filters</h3>
@@ -91,8 +97,8 @@ const ProductsFiltersSidebar: React.FC<ProductsFiltersSidebarProps> = ({
         <label className="block text-xs font-medium text-gray-500 mb-1">Category</label>
         <select
           className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
-          value={category}
-          onChange={e => setCategory(e.target.value)}
+          value={category || 'All'}
+          onChange={e => setCategory(e.target.value === 'All' ? null : e.target.value)}
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>{cat}</option>
@@ -103,8 +109,8 @@ const ProductsFiltersSidebar: React.FC<ProductsFiltersSidebarProps> = ({
         <label className="block text-xs font-medium text-gray-500 mb-1">Variant</label>
         <select
           className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
-          value={variant}
-          onChange={e => setVariant(e.target.value)}
+          value={variant || ''}
+          onChange={e => setVariant(e.target.value === '' ? null : e.target.value)}
         >
           {variants.map((v) => (
             <option key={v} value={v}>{v || 'All Variants'}</option>
@@ -134,8 +140,8 @@ const ProductsFiltersSidebar: React.FC<ProductsFiltersSidebarProps> = ({
         <label className="block text-xs font-medium text-gray-500 mb-1">Availability</label>
         <select
           className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
-          value={availability}
-          onChange={e => setAvailability(e.target.value)}
+          value={availability || ''}
+          onChange={e => setAvailability(e.target.value === '' ? null : e.target.value)}
         >
           {availabilityOptions.map((a) => (
             <option key={a} value={a}>{a || 'All'}</option>
@@ -146,8 +152,8 @@ const ProductsFiltersSidebar: React.FC<ProductsFiltersSidebarProps> = ({
         <label className="block text-xs font-medium text-gray-500 mb-1">Region Suitability</label>
         <select
           className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
-          value={region}
-          onChange={e => setRegion(e.target.value)}
+          value={region || ''}
+          onChange={e => setRegion(e.target.value === '' ? null : e.target.value)}
         >
           {regions.map((r) => (
             <option key={r} value={r}>{r || 'All'}</option>
