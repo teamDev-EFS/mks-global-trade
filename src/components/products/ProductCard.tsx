@@ -2,21 +2,26 @@ import React, { useState } from 'react';
 import { Product } from '../../types';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
-import { Whatsapp } from 'lucide-react';
 import ProductEnquiryModal from './ProductEnquiryModal';
+
+const WhatsAppIcon = () => (
+  <svg viewBox="0 0 32 32" className="w-5 h-5 fill-green-500" aria-hidden="true" focusable="false">
+    <path d="M16 .4C7.5.4.4 7.5.4 16c0 2.8.7 5.4 2.1 7.7L0 32l8.6-2.5c2.2 1.2 4.7 1.9 7.4 1.9 8.5 0 15.6-7.1 15.6-15.6S24.5.4 16 .4zm0 28.6c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-5.1 1.5 1.4-5-.3-.5C3.6 20.7 3 18.4 3 16 3 8.8 8.8 3 16 3s13 5.8 13 13-5.8 13-13 13zm7.2-9.8c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.7-.2-1 .2-.3.4-1.1 1.3-1.3 1.5-.2.2-.5.3-.9.1-.4-.2-1.6-.6-3-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8.2-.2.4-.5.6-.7.2-.2.3-.4.5-.7.2-.3.1-.6 0-.8-.1-.2-1-2.4-1.4-3.3-.4-.9-.8-.8-1-.8h-.9c-.3 0-.8.1-1.2.6-.4.4-1.6 1.6-1.6 3.9s1.7 4.6 1.9 4.9c.2.3 3.4 5.1 8.2 7.1 1.1.5 2 .8 2.7 1 .9.3 1.7.3 2.3.2.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.4-.3-.8-.5z"/>
+  </svg>
+);
 
 interface ProductCardProps {
   product: Product;
-  inquiryList: Product[];
-  addProduct: (product: Product) => void;
-  removeProduct: (productId: string) => void;
-  openQuickView: (product: Product) => void;
+  inquiryList?: Product[];
+  addProduct?: (product: Product) => void;
+  removeProduct?: (productId: string) => void;
+  openQuickView?: (product: Product) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList, addProduct, removeProduct, openQuickView }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], addProduct, removeProduct, openQuickView }) => {
   const [enquiryOpen, setEnquiryOpen] = useState(false);
 
-  const isInInquiryList = inquiryList.some((p) => p.id === product.id);
+  const isInInquiryList = inquiryList?.some ? inquiryList.some((p) => p.id === product.id) : false;
 
   // Compose WhatsApp message for enquiry modal
   const composeMessage = (userDetails: { name: string; email: string; phone: string; quantity: string; location: string; message: string }) => {
@@ -40,7 +45,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList, addProd
     <Card className="flex flex-col hover:shadow-xl transition-shadow rounded-[20px] overflow-hidden">
       <div
         className="relative overflow-hidden rounded-t-[20px] cursor-pointer group"
-        onClick={() => openQuickView(product)}
+        onClick={() => openQuickView && openQuickView(product)}
       >
         <img
           src={product.image}
@@ -71,7 +76,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList, addProd
         </div>
         <p className="text-sm text-deepGreen-900 font-semibold mb-4">Packing: {product.packing}</p>
         <div className="mt-auto flex items-center justify-between">
-          {isInInquiryList ? (
+          {isInInquiryList && removeProduct && addProduct ? (
             <Button
               variant="secondary"
               onClick={() => removeProduct(product.id)}
@@ -79,7 +84,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList, addProd
             >
               Remove Inquiry
             </Button>
-          ) : (
+          ) : addProduct ? (
             <Button
               variant="primary"
               onClick={() => addProduct(product)}
@@ -87,14 +92,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList, addProd
             >
               Add to Inquiry
             </Button>
-          )}
+          ) : null}
           <Button
             variant="tertiary"
             onClick={() => setEnquiryOpen(true)}
             aria-label={`WhatsApp enquiry for ${product.name}`}
             className="flex items-center gap-2 text-orange-500 hover:text-orange-600"
           >
-            <Whatsapp className="w-5 h-5" /> WhatsApp Enquiry
+            <WhatsAppIcon /> WhatsApp Enquiry
           </Button>
         </div>
       </div>
