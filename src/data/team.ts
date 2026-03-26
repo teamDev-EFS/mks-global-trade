@@ -1,0 +1,1 @@
+import { TeamMember } from '../types'; export const team: TeamMember[] = [ { id: '1', name: 'Kundan Patel', role: 'Co-Founder', avatar: 'https://i.pravatar.cc/150?img=4' }, { id: '2', name: 'Shubham Patel', role: 'Co-Founder', avatar: 'https://i.pravatar.cc/150?img=5' }, { id: '3', name: 'Mohit Choudhary', role: 'Co-Founder', avatar: 'https://i.pravatar.cc/150?img=6' } ];
