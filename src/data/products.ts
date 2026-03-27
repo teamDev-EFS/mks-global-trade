@@ -1,4 +1,6 @@
 import { Product } from '../types';
+import productImageJaggery from '../assets/Jaggery.jpeg';
+import productImageOnion from '../assets/Onion.webp';
 
 export const products: Product[] = [
   {
@@ -41,8 +43,7 @@ export const products: Product[] = [
     packing: 'Custom',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image:
-      'https://images.unsplash.com/photo-1576394435759-02a2674ff6e0?w=600&h=400&fit=crop',
+    image: productImageJaggery,
     featured: true,
     inquiryPriority: 2,
     description:
@@ -64,8 +65,7 @@ export const products: Product[] = [
     packing: 'Various sizes',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image:
-      'https://images.unsplash.com/photo-1489806149968-aee262986b40?w=600&h=400&fit=crop',
+    image: productImageOnion,
     featured: true,
     inquiryPriority: 3,
     description:
