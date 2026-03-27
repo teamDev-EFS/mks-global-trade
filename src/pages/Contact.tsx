@@ -8,6 +8,10 @@ import Button from '../components/ui/Button';
 import { WhatsAppActionLink } from '../components/ui/WhatsAppActionButton';
 import { validateContactFormFields } from '../lib/formValidation';
 import { submitPublicEnquiry } from '../lib/publicEnquiryApi';
+import Seo from '../components/seo/Seo';
+import { ContactPageJsonLd } from '../components/seo/JsonLd';
+import { getStaticPageMeta } from '../seo/pageMeta';
+import { trackContactFormSubmit, trackWhatsAppClick } from '../lib/analytics';
 
 const WHATSAPP = '919232091060';
 
@@ -71,19 +75,35 @@ const Contact: React.FC = () => {
         ],
       });
       toast.success(`Enquiry saved — ${res.enquiryId}`);
+      trackContactFormSubmit();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to submit');
       return;
     }
 
-    const message = `Hello MSK Global Trade,%0A%0AI would like to inquire about your products with the following details:%0A- Name: ${form.name}%0A- Mail: ${form.email}%0A- Phone: ${form.phone}%0A- Product: ${form.product || 'N/A'}%0A- Quantity: ${form.quantity || 'N/A'}%0A- Location: ${form.location || 'N/A'}%0A- Message: ${form.message || 'N/A'}%0A%0APlease get back to me at your earliest convenience.`;
+    const message =
+      `Hello MSK Global Trade,\n\n` +
+      `I would like to inquire about your products with the following details:\n` +
+      `- Name: ${form.name}\n` +
+      `- Mail: ${form.email}\n` +
+      `- Phone: ${form.phone}\n` +
+      `- Product: ${form.product || 'N/A'}\n` +
+      `- Quantity: ${form.quantity || 'N/A'}\n` +
+      `- Location: ${form.location || 'N/A'}\n` +
+      `- Message: ${form.message || 'N/A'}\n\n` +
+      `Please get back to me at your earliest convenience.`;
 
+    trackWhatsAppClick('contact_form', { stage: 'after_submit' });
     const url = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  const contactMeta = getStaticPageMeta('contact');
+
   return (
     <div className="bg-[#F8F6F3] min-h-screen pb-12">
+      <Seo {...contactMeta} />
+      <ContactPageJsonLd />
       <PageHero
         title="Contact Us"
         subtitle="Tell us what you need — bulk supply, product specs, or export destinations. We reply quickly."
@@ -133,6 +153,7 @@ const Contact: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full text-center"
+                onClick={() => trackWhatsAppClick('contact_sidebar')}
               >
                 Chat on WhatsApp
               </WhatsAppActionLink>

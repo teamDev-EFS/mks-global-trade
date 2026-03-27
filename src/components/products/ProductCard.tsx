@@ -8,6 +8,8 @@ import Card from '../ui/Card';
 import { WhatsAppActionButton } from '../ui/WhatsAppActionButton';
 import ProductEnquiryModal from './ProductEnquiryModal';
 import { submitPublicEnquiry } from '../../lib/publicEnquiryApi';
+import { productImageAlt } from '../../seo/pageMeta';
+import { trackProductEnquiry, trackWhatsAppClick } from '../../lib/analytics';
 
 interface ProductCardProps {
   product: Product;
@@ -26,13 +28,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], ad
 
   // Compose WhatsApp message for enquiry modal
   const composeMessage = (userDetails: { name: string; email: string; phone: string; quantity: string; location: string; message: string }) => {
-    return `Hello MSK Global Trade,%0A%0AI am interested in the product: ${product.name}.%0A` +
-      `Category: ${product.category}%0A` +
-      `Packing: ${product.packing}%0A` +
-      `Quantity: ${userDetails.quantity || 'N/A'}%0A` +
-      `Location: ${userDetails.location || 'N/A'}%0A%0A` +
-      `My Details:%0AName: ${userDetails.name}%0AEmail: ${userDetails.email}%0APhone: ${userDetails.phone}%0A` +
-      `Additional Message: ${userDetails.message || 'N/A'}%0A%0AThank you.`;
+    return (
+      `Hello MSK Global Trade,\n\n` +
+      `I am interested in the product: ${product.name}.\n` +
+      `Category: ${product.category}\n` +
+      `Packing: ${product.packing}\n` +
+      `Quantity: ${userDetails.quantity || 'N/A'}\n` +
+      `Location: ${userDetails.location || 'N/A'}\n\n` +
+      `My Details:\n` +
+      `Name: ${userDetails.name}\n` +
+      `Email: ${userDetails.email}\n` +
+      `Phone: ${userDetails.phone}\n` +
+      `Additional Message: ${userDetails.message || 'N/A'}\n\n` +
+      `Thank you.`
+    );
   };
 
   const handleWhatsAppEnquiry = async (userDetails: {
@@ -67,6 +76,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], ad
       toast.error(e instanceof Error ? e.message : 'Could not save enquiry');
       return;
     }
+    trackProductEnquiry(product.slug, 'product_card');
+    trackWhatsAppClick('product_card_enquiry', { product_slug: product.slug });
     const message = composeMessage(userDetails);
     const whatsappUrl = `https://wa.me/919232091060?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -84,9 +95,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], ad
       >
         <img
           src={productImage}
-          alt={product.name}
+          alt={productImageAlt(product)}
           className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
+          decoding="async"
         />
       </div>
       <div className="p-6 flex flex-col flex-grow">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
+import BrandLogo from '../brand/BrandLogo';
 
 const HeroSection: React.FC = () => {
   const backgroundImage =
@@ -19,6 +20,14 @@ const HeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-emerald-900/85 to-emerald-800/95 mix-blend-multiply pointer-events-none" />
       <div className="relative max-w-[min(100%,1400px)] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 md:py-16 lg:py-20 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
         <div className="flex-1 min-w-0 max-w-xl">
+          <div className="mb-5 sm:mb-6 inline-block">
+            <div className="bg-white/95 rounded-2xl px-4 py-3 shadow-lg ring-1 ring-white/30">
+              <BrandLogo className="h-12 sm:h-14 w-auto max-w-[220px]" alt="MSK Global Trade" />
+            </div>
+          </div>
+          <p className="text-sm sm:text-base font-medium text-emerald-200/95 mb-3 max-w-xl">
+            Empowering Global Trade with Sustainable Indian Agriculture.
+          </p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight mb-4 sm:mb-5 text-ivory-50 drop-shadow-lg">
             Premium Agro Exports
             <br />

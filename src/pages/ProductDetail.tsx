@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Plus, Package, MapPin, CheckCircle2 } from 'lucide-react';
 import PageHero from '../components/layout/PageHero';
 import { getProductBySlugOrId } from '../lib/products';
@@ -9,6 +9,12 @@ import { WhatsAppActionButton } from '../components/ui/WhatsAppActionButton';
 import ProductEnquiryModal from '../components/products/ProductEnquiryModal';
 import { submitPublicEnquiry } from '../lib/publicEnquiryApi';
 import { toast } from 'react-toastify';
+import Seo from '../components/seo/Seo';
+import FaqSection from '../components/seo/FaqSection';
+import { BreadcrumbJsonLd, FaqJsonLd, ProductJsonLd } from '../components/seo/JsonLd';
+import { buildProductMeta, getStaticPageMeta, productImageAlt } from '../seo/pageMeta';
+import { getProductFaqs } from '../seo/productSeo';
+import { trackProductEnquiry, trackWhatsAppClick } from '../lib/analytics';
 
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -18,37 +24,46 @@ export default function ProductDetail() {
   const [enquiryOpen, setEnquiryOpen] = useState(false);
 
   useEffect(() => {
-    if (product) {
-      setVariant(product.variants[0] ?? 'N/A');
-      document.title = `${product.name} · MSK Global Trade`;
-    } else {
-      document.title = 'Product · MSK Global Trade';
-    }
-    return () => {
-      document.title = 'MSK Global Trade';
-    };
+    if (product) setVariant(product.variants[0] ?? 'N/A');
   }, [product]);
 
   if (!product) {
+    const notFoundMeta = getStaticPageMeta('products');
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 bg-[#F8F6F3]">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Product not found</h1>
-        <p className="text-gray-600 mb-6 text-center max-w-md">
-          This product may have been removed or the link is incorrect.
-        </p>
-        <Link
-          to="/products"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to products
-        </Link>
-      </div>
+      <>
+        <Seo
+          title="Product not found | MSK Global Trade"
+          description="This product may have been removed. Browse our export catalogue for vermicompost, spices, jaggery and more."
+          keywords={notFoundMeta.keywords}
+          path="/products"
+          noindex
+        />
+        <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 bg-[#F8F6F3]">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Product not found</h1>
+          <p className="text-gray-600 mb-6 text-center max-w-md">
+            This product may have been removed or the link is incorrect.
+          </p>
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to products
+          </Link>
+        </div>
+      </>
     );
   }
 
+  if (slug && slug !== product.slug) {
+    return <Navigate to={`/products/${product.slug}`} replace />;
+  }
+
+  const meta = buildProductMeta(product);
+  const faqs = getProductFaqs(product.slug);
   const img = product.image || `/images/products/${product.slug}.jpg`;
   const inList = isInInquiryList(product.id, variant);
+  const imgAlt = productImageAlt(product);
 
   const handleWhatsAppSubmit = async (userDetails: {
     name: string;
@@ -82,6 +97,8 @@ export default function ProductDetail() {
       toast.error(e instanceof Error ? e.message : 'Could not save enquiry');
       return;
     }
+    trackProductEnquiry(product.slug, 'product_detail_modal');
+    trackWhatsAppClick('product_detail_enquiry', { product_slug: product.slug });
     const message =
       `Hello MSK Global Trade,\n\nI am interested in: ${product.name}\n` +
       `Category: ${product.category}\nVariant: ${variant}\n` +
@@ -94,6 +111,17 @@ export default function ProductDetail() {
 
   return (
     <div className="bg-[#F8F6F3] min-h-screen pb-12">
+      <Seo {...meta} ogImage={product.image} type="product" />
+      <ProductJsonLd product={product} />
+      <FaqJsonLd faqs={faqs} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', path: '/' },
+          { name: 'Products', path: '/products' },
+          { name: product.name, path: meta.path },
+        ]}
+      />
+
       <PageHero
         variant="gradient"
         title={product.name}
@@ -108,7 +136,14 @@ export default function ProductDetail() {
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
           <div className="grid md:grid-cols-2 gap-0 md:gap-8">
             <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[320px] bg-gray-100">
-              <img src={img} alt={product.name} className="w-full h-full object-cover" />
+              <img
+                src={img}
+                alt={imgAlt}
+                className="w-full h-full object-cover"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
             </div>
             <div className="p-6 sm:p-8 flex flex-col">
               <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -207,7 +242,36 @@ export default function ProductDetail() {
             </div>
           </div>
         </div>
+
+        <section className="mt-8 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8" aria-labelledby="export-links-heading">
+          <h2 id="export-links-heading" className="text-xl font-bold text-emerald-950 mb-3">
+            Bulk export &amp; sourcing
+          </h2>
+          <p className="text-gray-700 leading-relaxed mb-4">
+            MSK Global Trade supplies export-grade {product.name} from India to the UAE, GCC, and worldwide. Learn how we{' '}
+            <Link to="/services/export-process" className="text-orange-700 font-semibold hover:underline">
+              manage export and logistics
+            </Link>
+            , explore our{' '}
+            <Link to="/services" className="text-orange-700 font-semibold hover:underline">
+              full agricultural export services
+            </Link>
+            , or{' '}
+            <Link to="/contact" className="text-orange-700 font-semibold hover:underline">
+              enquire for bulk export
+            </Link>{' '}
+            with your volume and destination.
+          </p>
+          <Link
+            to="/contact"
+            className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-orange-500 text-white font-semibold text-sm hover:bg-orange-600 transition-colors"
+          >
+            Enquire for bulk export
+          </Link>
+        </section>
       </article>
+
+      <FaqSection id="product-faq" title={`${product.name} export — common questions`} faqs={faqs} />
 
       {enquiryOpen && (
         <ProductEnquiryModal

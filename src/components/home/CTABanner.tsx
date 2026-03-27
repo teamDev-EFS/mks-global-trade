@@ -15,15 +15,26 @@ const CTABanner: React.FC = () => {
           Looking for Bulk Supply?
         </h2>
         <p className="text-base sm:text-lg mb-8 text-white/95 max-w-xl mx-auto leading-relaxed">
-          Contact us today to discuss your requirements.
+          India → UAE → global: export-grade agro supply. Explore our catalogue or enquire for bulk export.
         </p>
-        <Link
-          to="/contact"
-          className="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-800"
-        >
-          Contact Us
-          <ArrowRight className="w-5 h-5 shrink-0" aria-hidden />
-        </Link>
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center items-center">
+          <Link
+            to="/contact"
+            className="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-800"
+          >
+            Enquire for bulk export
+            <ArrowRight className="w-5 h-5 shrink-0" aria-hidden />
+          </Link>
+          <Link
+            to="/products"
+            className="inline-flex items-center justify-center gap-2 border-2 border-white/90 text-white font-semibold px-8 py-3.5 rounded-full hover:bg-white/10 transition-colors"
+          >
+            View products
+          </Link>
+          <Link to="/services" className="text-sm font-medium text-white/90 underline underline-offset-2 hover:text-white">
+            Export services
+          </Link>
+        </div>
       </div>
     </section>
   );

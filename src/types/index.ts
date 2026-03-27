@@ -1,6 +1,8 @@
 export interface Product {
   id: string;
   slug: string;
+  /** Optional alternate URL slugs for the same product (SEO / legacy links). */
+  slugAliases?: string[];
   name: string;
   category: string;
   variants: string[];

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { X, Shield } from 'lucide-react';
+import BrandLogo from '../brand/BrandLogo';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ const navLinks = [
   { to: '/products', label: 'Products' },
   { to: '/services', label: 'Services' },
   { to: '/about', label: 'About' },
+  { to: '/insights', label: 'Insights' },
   { to: '/contact', label: 'Contact' },
 ];
 
@@ -23,8 +25,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, toggleMenu }) => {
       className={`fixed inset-0 z-50 bg-white/95 backdrop-blur transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
     >
-      <div className="flex justify-between items-center p-4 border-b">
-        <span className="text-lg font-bold text-green-800">Menu</span>
+      <div className="flex justify-between items-center p-4 border-b gap-3">
+        <Link to="/" onClick={toggleMenu} className="flex items-center shrink-0" aria-label="Home">
+          <BrandLogo className="h-10 w-auto max-w-[140px] rounded-md" alt="" />
+        </Link>
         <button onClick={toggleMenu} className="focus:outline-none p-2 rounded hover:bg-gray-100">
           <X className="w-7 h-7 text-gray-700" />
         </button>

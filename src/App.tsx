@@ -7,6 +7,8 @@ import ProductDetail from './pages/ProductDetail';
 import Services from './pages/Services';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Insights from './pages/Insights';
+import InsightPost from './pages/InsightPost';
 import RequireAdmin from './components/admin/RequireAdmin';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminLogin from './pages/admin/AdminLogin';
@@ -37,9 +39,11 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:slug" element={<ProductDetail />} />
-        <Route path="/services" element={<Services />} />
+        <Route path="/services/:sectionSlug?" element={<Services />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/insights" element={<Insights />} />
+        <Route path="/insights/:slug" element={<InsightPost />} />
       </Route>
     </Routes>
   );

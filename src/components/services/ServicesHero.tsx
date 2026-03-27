@@ -6,6 +6,7 @@ import PageHero from '../layout/PageHero';
 const ServicesHero: React.FC = () => {
   return (
     <PageHero
+      id="export-solutions"
       variant="gradient-map"
       title="Our Export Services"
       subtitle="End-to-end sourcing, quality control, and global export solutions for agro and natural products."

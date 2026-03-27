@@ -1,11 +1,12 @@
 import React from 'react';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { trackWhatsAppClick } from '../../lib/analytics';
 
 const whatsappUrl =
   'https://wa.me/919232091060?text=' +
   encodeURIComponent(
-    `Hello MSK Global Trade,%0A%0AI would like to inquire about your export services. Please contact me with more details.%0A%0AThank you.`
+    'Hello MSK Global Trade,\n\nI would like to inquire about your export services. Please contact me with more details.\n\nThank you.'
   );
 
 const ServicesCTA: React.FC = () => {
@@ -27,6 +28,7 @@ const ServicesCTA: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center px-8 py-3 rounded-full font-semibold bg-green-600 text-white shadow-lg hover:bg-green-700 transition-all text-lg group"
+            onClick={() => trackWhatsAppClick('services_cta')}
           >
             <MessageCircle className="mr-2 w-5 h-5" /> WhatsApp
           </a>

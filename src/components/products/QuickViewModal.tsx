@@ -4,6 +4,7 @@ import { X, Plus } from 'lucide-react';
 import { WhatsAppActionLink } from '../ui/WhatsAppActionButton';
 import { Product } from '../../types';
 import { useInquiryList } from '../../store/useInquiryList';
+import { trackWhatsAppClick } from '../../lib/analytics';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -12,8 +13,17 @@ interface QuickViewModalProps {
 
 const getWhatsAppUrl = (product: Product, selectedVariant?: string) => {
   const variantText = selectedVariant && selectedVariant !== 'N/A' ? selectedVariant : 'N/A';
-  const message = `Hello MSK Global Trade,%0A%0AI would like to inquire about the following product:%0A%0AProduct: ${product.name}%0ACategory: ${product.category}%0AVariant: ${variantText}%0ARequirement: I am interested in bulk supply. Please share details.%0ALocation: %0A%0APlease share pricing, MOQ, packing details, and export availability.%0A%0AThank you.`;
-  return `https://wa.me/919232091060?text=${message}`;
+  const message =
+    `Hello MSK Global Trade,\n\n` +
+    `I would like to inquire about the following product:\n\n` +
+    `Product: ${product.name}\n` +
+    `Category: ${product.category}\n` +
+    `Variant: ${variantText}\n` +
+    `Requirement: I am interested in bulk supply. Please share details.\n` +
+    `Location:\n\n` +
+    `Please share pricing, MOQ, packing details, and export availability.\n\n` +
+    `Thank you.`;
+  return `https://wa.me/919232091060?text=${encodeURIComponent(message)}`;
 };
 
 const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose }) => {
@@ -117,6 +127,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose }) => 
                 rel="noopener noreferrer"
                 className="flex-1 text-center min-h-[44px]"
                 aria-label="Open WhatsApp with this product"
+                onClick={() => trackWhatsAppClick('quick_view', { product_slug: product.slug })}
               >
                 WhatsApp
               </WhatsAppActionLink>

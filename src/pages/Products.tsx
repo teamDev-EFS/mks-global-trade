@@ -13,8 +13,12 @@ import ProductEnquiryModal from '../components/products/ProductEnquiryModal';
 import { submitPublicEnquiry } from '../lib/publicEnquiryApi';
 import { toast } from 'react-toastify';
 import { useProductCatalogFilters } from '../hooks/useProductCatalogFilters';
+import Seo from '../components/seo/Seo';
+import { getStaticPageMeta } from '../seo/pageMeta';
+import { trackWhatsAppClick } from '../lib/analytics';
 
 const Products: React.FC = () => {
+  const productsMeta = getStaticPageMeta('products');
   const {
     search,
     setSearch,
@@ -90,6 +94,9 @@ const Products: React.FC = () => {
         `My details:\nName: ${details.name}\nEmail: ${details.email}\nPhone: ${details.phone}\n\n` +
         `Message: ${details.message || 'N/A'}\n\nThank you.`;
     }
+    trackWhatsAppClick('products_inquiry_list', {
+      product_count: String(inquiryList.length),
+    });
     window.open(`https://wa.me/919232091060?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
     setEnquiryOpen(false);
   };
@@ -108,6 +115,7 @@ const Products: React.FC = () => {
 
   return (
     <div className="bg-ivory-50 min-h-screen">
+      <Seo {...productsMeta} />
       <ProductsHero />
       <main
         id="main-content"

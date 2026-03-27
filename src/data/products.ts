@@ -27,6 +27,7 @@ export const products: Product[] = [
   {
     id: '2',
     slug: 'jaggery',
+    slugAliases: ['jaggery-powder'],
     name: 'Jaggery',
     category: 'Food Products',
     variants: ['Solid', 'Cube', 'Powder'],

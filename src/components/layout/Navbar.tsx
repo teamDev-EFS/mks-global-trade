@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, Shield } from 'lucide-react';
+import BrandLogo from '../brand/BrandLogo';
 import MobileMenu from './MobileMenu';
 
 const navLinks = [
   { to: '/products', label: 'Products' },
   { to: '/services', label: 'Services' },
   { to: '/about', label: 'About' },
+  { to: '/insights', label: 'Insights' },
   { to: '/contact', label: 'Contact' },
 ];
 
@@ -17,8 +19,15 @@ const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100/80 shadow-sm">
       <nav className="max-w-[min(100%,1400px)] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between min-h-[64px] py-2 md:h-16">
-        <Link to="/" className="flex items-center text-2xl font-extrabold text-green-800 tracking-tight">
-          <span className="bg-gradient-to-r from-green-700 to-emerald-500 bg-clip-text text-transparent">MSK Global Trade</span>
+        <Link
+          to="/"
+          className="flex items-center gap-2 md:gap-3 min-w-0 shrink-0 group"
+          aria-label="MSK Global Trade home"
+        >
+          <BrandLogo className="h-9 w-auto md:h-10 max-h-10 md:max-h-11 max-w-[120px] sm:max-w-[140px] rounded-lg ring-1 ring-white/10 shadow-sm bg-white/10" alt="" />
+          <span className="text-lg sm:text-xl md:text-2xl font-extrabold bg-gradient-to-r from-green-800 to-emerald-600 bg-clip-text text-transparent tracking-tight truncate">
+            MSK Global Trade
+          </span>
         </Link>
         <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
           {navLinks.map((link) => (

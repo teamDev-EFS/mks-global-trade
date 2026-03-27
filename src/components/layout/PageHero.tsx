@@ -5,6 +5,8 @@ import { Home } from 'lucide-react';
 export type BreadcrumbItem = { label: string; to?: string };
 
 type PageHeroProps = {
+  /** Root section id for deep linking (e.g. services sections). */
+  id?: string;
   title: string;
   subtitle?: string;
   breadcrumbs?: BreadcrumbItem[];
@@ -16,6 +18,7 @@ type PageHeroProps = {
 };
 
 const PageHero: React.FC<PageHeroProps> = ({
+  id,
   title,
   subtitle,
   breadcrumbs,
@@ -30,6 +33,7 @@ const PageHero: React.FC<PageHeroProps> = ({
 
   return (
     <section
+      id={id}
       className={`relative bg-gradient-to-br from-green-700 via-emerald-600 to-green-900 min-h-[200px] sm:min-h-[240px] flex items-center overflow-hidden border-b border-green-900/10 ${className}`}
       aria-labelledby="page-hero-title"
     >
