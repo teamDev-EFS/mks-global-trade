@@ -29,16 +29,17 @@ const Services: React.FC = () => {
   useEffect(() => {
     if (!sectionSlug || !VALID_SECTIONS.has(sectionSlug)) return;
     const id = sectionSlug;
-    const run = () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const t = window.setTimeout(run, 100);
-    return () => window.clearTimeout(t);
+    const timer = window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+    return () => window.clearTimeout(timer);
   }, [sectionSlug]);
 
   return (
     <>
       <Seo {...meta} />
       <FaqJsonLd faqs={SERVICES_FAQS} />
-      <div className="bg-[#F8F6F3] min-h-screen">
+      <div className="min-h-screen">
         <ServicesHero />
         <ServicesJumpNav />
         <ServicesOverview />

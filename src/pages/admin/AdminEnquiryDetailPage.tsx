@@ -1,9 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { adminFetch } from '../../api/adminClient';
 import { toast } from 'react-toastify';
+import { ArrowLeft, MessageCircle, Loader2 } from 'lucide-react';
+import { adminFetch } from '../../api/adminClient';
 import { buildAdminFollowUpMessage, whatsappMeUrl } from '../../lib/whatsappAdmin';
-import { MessageCircle } from 'lucide-react';
+import {
+  Card,
+  CardTitle,
+  StatusBadge,
+  LoadingState,
+  ErrorState,
+  PrimaryButton,
+  FilterSelect,
+  STATUS_OPTIONS,
+  PRIORITY_OPTIONS,
+} from '../../components/admin/AdminUI';
 
 type Enquiry = {
   _id: string;
@@ -28,249 +39,270 @@ type Enquiry = {
   createdAt: string;
 };
 
-function productSummary(enquiry: Enquiry) {
+function summarizeProducts(enquiry: Enquiry): string {
   const parts = enquiry.products?.map((p) => p.productName || p.category).filter(Boolean);
   return parts?.length ? parts.join(', ') : 'your enquiry';
 }
 
-export default function AdminEnquiryDetailPage() {
+const InfoField: React.FC<{ label: string; value: string | undefined }> = ({ label, value }) => (
+  <div>
+    <dt className="text-xs font-medium text-stone-400 uppercase tracking-wider">{label}</dt>
+    <dd className="mt-0.5 text-sm font-medium text-stone-800">{value || '—'}</dd>
+  </div>
+);
+
+const AdminEnquiryDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [e, setE] = useState<Enquiry | null>(null);
+  const [enquiry, setEnquiry] = useState<Enquiry | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState('');
   const [status, setStatus] = useState('');
   const [priority, setPriority] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  const load = () => {
+  const loadEnquiry = useCallback(() => {
     if (!id) return;
+    setError(null);
     adminFetch<Enquiry>(`/api/admin/enquiries/${id}`)
       .then((data) => {
-        setE(data);
+        setEnquiry(data);
         setStatus(data.status);
         setPriority(data.priority);
       })
-      .catch((err) => toast.error(err instanceof Error ? err.message : 'Failed'));
-  };
-
-  useEffect(() => {
-    load();
+      .catch((e) => setError(e instanceof Error ? e.message : 'Failed to load'));
   }, [id]);
 
-  if (!e) {
-    return <div className="text-gray-500">Loading…</div>;
-  }
+  useEffect(() => {
+    loadEnquiry();
+  }, [loadEnquiry]);
 
-  const saveStatus = async () => {
+  const saveChanges = useCallback(async () => {
+    if (!enquiry) return;
+    setSaving(true);
     try {
-      await adminFetch(`/api/admin/enquiries/${e._id}`, {
+      await adminFetch(`/api/admin/enquiries/${enquiry._id}`, {
         method: 'PATCH',
         body: JSON.stringify({ status, priority }),
       });
       toast.success('Updated');
-      load();
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Error');
+      loadEnquiry();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Error');
+    } finally {
+      setSaving(false);
     }
-  };
+  }, [enquiry, status, priority, loadEnquiry]);
 
-  const addNote = async () => {
-    if (!note.trim()) return;
+  const addNote = useCallback(async () => {
+    if (!enquiry || !note.trim()) return;
     try {
-      await adminFetch(`/api/admin/enquiries/${e._id}/notes`, {
+      await adminFetch(`/api/admin/enquiries/${enquiry._id}/notes`, {
         method: 'POST',
         body: JSON.stringify({ text: note }),
       });
       toast.success('Note added');
       setNote('');
-      load();
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Error');
+      loadEnquiry();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Error');
     }
-  };
+  }, [enquiry, note, loadEnquiry]);
 
-  const openWhatsAppAndTrack = async () => {
-    const msg = buildAdminFollowUpMessage(e.customerName, productSummary(e));
-    const phone = e.whatsappNumber || e.phone;
+  const contactViaWhatsApp = useCallback(async () => {
+    if (!enquiry) return;
+    const msg = buildAdminFollowUpMessage(enquiry.customerName, summarizeProducts(enquiry));
+    const phone = enquiry.whatsappNumber || enquiry.phone;
     window.open(whatsappMeUrl(phone, msg), '_blank', 'noopener,noreferrer');
     try {
-      await adminFetch(`/api/admin/enquiries/${e._id}/whatsapp-contacted`, { method: 'POST' });
+      await adminFetch(`/api/admin/enquiries/${enquiry._id}/whatsapp-contacted`, { method: 'POST' });
       toast.success('Marked as contacted via WhatsApp');
-      load();
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Error');
+      loadEnquiry();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Error');
     }
-  };
+  }, [enquiry, loadEnquiry]);
+
+  if (error) return <ErrorState message={error} onRetry={loadEnquiry} />;
+  if (!enquiry) return <LoadingState message="Loading enquiry..." />;
+
+  const sortedTimeline = enquiry.timeline
+    ?.slice()
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   return (
-    <div className="space-y-8 max-w-5xl">
+    <div className="space-y-6 max-w-6xl">
+      {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <Link to="/admin/enquiries" className="text-sm text-orange-600 hover:underline">
-            ← Back to enquiries
+          <Link to="/admin/enquiries" className="inline-flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-700 transition-colors mb-3">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back to enquiries
           </Link>
-          <h2 className="text-2xl font-bold text-gray-900 mt-2 flex flex-wrap items-center gap-3">
-            <span className="font-mono">{e.enquiryId}</span>
-            <span className="inline-flex px-2 py-0.5 rounded-full bg-gray-100 text-sm font-normal">{e.status}</span>
-            <span className="inline-flex px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-sm font-normal">{e.priority}</span>
+          <h2 className="text-2xl font-bold text-stone-900 tracking-tight flex flex-wrap items-center gap-3">
+            <span className="font-mono">{enquiry.enquiryId}</span>
+            <StatusBadge value={enquiry.status} />
+            <StatusBadge value={enquiry.priority} type="priority" />
           </h2>
-          <p className="text-gray-500 text-sm mt-1">{e.customerName} · {new Date(e.createdAt).toLocaleString()}</p>
+          <p className="text-stone-500 text-sm mt-1">
+            {enquiry.customerName} &middot; {new Date(enquiry.createdAt).toLocaleString()}
+          </p>
         </div>
         <button
           type="button"
-          onClick={openWhatsAppAndTrack}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 shadow"
+          onClick={contactViaWhatsApp}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 shadow-sm transition-colors"
         >
-          <MessageCircle className="w-5 h-5" />
-          WhatsApp lead
+          <MessageCircle className="w-4.5 h-4.5" />
+          WhatsApp Lead
         </button>
       </div>
 
+      {/* Content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left column */}
         <div className="lg:col-span-2 space-y-6">
-          <section className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-            <h3 className="font-semibold text-gray-900 mb-3">Customer</h3>
-            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div>
-                <dt className="text-gray-500">Name</dt>
-                <dd className="font-medium">{e.customerName}</dd>
-              </div>
-              <div>
-                <dt className="text-gray-500">Email</dt>
-                <dd>{e.email || '—'}</dd>
-              </div>
-              <div>
-                <dt className="text-gray-500">Phone</dt>
-                <dd>{e.phone}</dd>
-              </div>
-              <div>
-                <dt className="text-gray-500">Location</dt>
-                <dd>{e.location || '—'}</dd>
-              </div>
-              <div>
-                <dt className="text-gray-500">Country / City</dt>
-                <dd>
-                  {e.country || '—'} {e.city ? `· ${e.city}` : ''}
-                </dd>
-              </div>
+          {/* Customer info */}
+          <Card>
+            <CardTitle>Customer Information</CardTitle>
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InfoField label="Name" value={enquiry.customerName} />
+              <InfoField label="Email" value={enquiry.email} />
+              <InfoField label="Phone" value={enquiry.phone} />
+              <InfoField label="Location" value={enquiry.location} />
+              <InfoField label="Country / City" value={`${enquiry.country || '—'}${enquiry.city ? ` · ${enquiry.city}` : ''}`} />
+              <InfoField label="Source" value={enquiry.sourceType?.replace(/_/g, ' ')} />
             </dl>
-          </section>
+          </Card>
 
-          <section className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-            <h3 className="font-semibold text-gray-900 mb-3">Products</h3>
+          {/* Products */}
+          <Card padding={false}>
+            <div className="px-5 pt-5 pb-3">
+              <CardTitle>Products</CardTitle>
+            </div>
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-500 border-b">
-                    <th className="pb-2">Product</th>
-                    <th className="pb-2">Category</th>
-                    <th className="pb-2">Variant</th>
-                    <th className="pb-2">Qty</th>
+                  <tr className="text-left text-stone-400 text-xs uppercase tracking-wider border-b border-stone-100">
+                    <th className="px-5 pb-2 font-medium">Product</th>
+                    <th className="px-5 pb-2 font-medium">Category</th>
+                    <th className="px-5 pb-2 font-medium">Variant</th>
+                    <th className="px-5 pb-2 font-medium">Qty</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {e.products?.length ? (
-                    e.products.map((p, i) => (
-                      <tr key={i} className="border-b border-gray-50">
-                        <td className="py-2">{p.productName || '—'}</td>
-                        <td className="py-2">{p.category || '—'}</td>
-                        <td className="py-2">{p.variant || '—'}</td>
-                        <td className="py-2">{String(p.quantity ?? '—')}</td>
+                  {enquiry.products?.length ? (
+                    enquiry.products.map((p, i) => (
+                      <tr key={i} className="border-b border-stone-50">
+                        <td className="px-5 py-2.5 text-stone-700">{p.productName || '—'}</td>
+                        <td className="px-5 py-2.5 text-stone-500">{p.category || '—'}</td>
+                        <td className="px-5 py-2.5 text-stone-500">{p.variant || '—'}</td>
+                        <td className="px-5 py-2.5 text-stone-500">{String(p.quantity ?? '—')}</td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={4} className="py-2 text-gray-500">
-                        No line items
-                      </td>
+                      <td colSpan={4} className="px-5 py-6 text-center text-stone-400 text-sm">No line items</td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
-          </section>
+          </Card>
 
-          <section className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-            <h3 className="font-semibold text-gray-900 mb-3">Message</h3>
-            <p className="text-gray-700 whitespace-pre-wrap text-sm">{e.message || '—'}</p>
-          </section>
+          {/* Message */}
+          <Card>
+            <CardTitle>Message</CardTitle>
+            <p className="text-stone-600 whitespace-pre-wrap text-sm leading-relaxed">
+              {enquiry.message || '—'}
+            </p>
+          </Card>
 
-          <section className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-            <h3 className="font-semibold text-gray-900 mb-3">Timeline</h3>
-            <ul className="space-y-3">
-              {e.timeline
-                ?.slice()
-                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                .map((t, i) => (
-                  <li key={i} className="text-sm border-l-2 border-emerald-600 pl-3">
-                    <span className="text-gray-400 text-xs">{new Date(t.createdAt).toLocaleString()}</span>
-                    <p className="text-gray-800">
-                      <span className="font-medium capitalize">{t.type.replace(/_/g, ' ')}</span> — {t.description}
-                      {t.adminName ? ` · ${t.adminName}` : ''}
+          {/* Timeline */}
+          <Card>
+            <CardTitle>Timeline</CardTitle>
+            {sortedTimeline?.length ? (
+              <ul className="space-y-3">
+                {sortedTimeline.map((t, i) => (
+                  <li key={i} className="text-sm border-l-2 border-emerald-300 pl-3">
+                    <span className="text-stone-400 text-xs">{new Date(t.createdAt).toLocaleString()}</span>
+                    <p className="text-stone-700">
+                      <span className="font-medium capitalize text-stone-900">{t.type.replace(/_/g, ' ')}</span>
+                      {' — '}{t.description}
+                      {t.adminName && <span className="text-stone-400"> &middot; {t.adminName}</span>}
                     </p>
                   </li>
                 ))}
-            </ul>
-          </section>
+              </ul>
+            ) : (
+              <p className="text-stone-400 text-sm">No timeline events</p>
+            )}
+          </Card>
         </div>
 
+        {/* Right column */}
         <div className="space-y-6">
-          <section className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-            <h3 className="font-semibold text-gray-900 mb-3">Update</h3>
-            <label className="block text-xs text-gray-500 mb-1">Status</label>
-            <select
-              className="w-full border rounded-lg px-3 py-2 text-sm mb-3"
-              value={status}
-              onChange={(ev) => setStatus(ev.target.value)}
-            >
-              {['new', 'contacted', 'in_progress', 'quoted', 'won', 'lost', 'archived'].map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-            <label className="block text-xs text-gray-500 mb-1">Priority</label>
-            <select
-              className="w-full border rounded-lg px-3 py-2 text-sm mb-3"
-              value={priority}
-              onChange={(ev) => setPriority(ev.target.value)}
-            >
-              {['low', 'medium', 'high'].map((p) => (
-                <option key={p} value={p}>
-                  {p}
-                </option>
-              ))}
-            </select>
-            <button type="button" onClick={saveStatus} className="w-full py-2 rounded-lg bg-emerald-800 text-white text-sm font-medium">
-              Save changes
-            </button>
-            {e.contactedViaWhatsApp ? (
-              <p className="text-xs text-green-700 mt-2">WhatsApp contact logged{e.contactedAt ? ` · ${new Date(e.contactedAt).toLocaleString()}` : ''}</p>
-            ) : null}
-          </section>
+          {/* Update status/priority */}
+          <Card>
+            <CardTitle>Update</CardTitle>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-stone-400 uppercase tracking-wider mb-1.5">Status</label>
+                <FilterSelect value={status} onChange={(e) => setStatus(e.target.value)}>
+                  {STATUS_OPTIONS.map((s) => (
+                    <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
+                  ))}
+                </FilterSelect>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-stone-400 uppercase tracking-wider mb-1.5">Priority</label>
+                <FilterSelect value={priority} onChange={(e) => setPriority(e.target.value)}>
+                  {PRIORITY_OPTIONS.map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </FilterSelect>
+              </div>
+              <PrimaryButton onClick={saveChanges} disabled={saving} className="w-full flex items-center justify-center gap-2">
+                {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+                Save Changes
+              </PrimaryButton>
+              {enquiry.contactedViaWhatsApp && (
+                <p className="text-xs text-emerald-600 mt-2">
+                  WhatsApp contact logged
+                  {enquiry.contactedAt && ` · ${new Date(enquiry.contactedAt).toLocaleString()}`}
+                </p>
+              )}
+            </div>
+          </Card>
 
-          <section className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-            <h3 className="font-semibold text-gray-900 mb-3">Admin notes</h3>
+          {/* Admin notes */}
+          <Card>
+            <CardTitle>Admin Notes</CardTitle>
             <textarea
-              className="w-full border rounded-lg px-3 py-2 text-sm min-h-[100px]"
-              placeholder="Internal note…"
+              className="w-full rounded-lg border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-sm min-h-[100px] placeholder:text-stone-400 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:bg-white outline-none transition-all resize-y"
+              placeholder="Internal note..."
               value={note}
-              onChange={(ev) => setNote(ev.target.value)}
+              onChange={(e) => setNote(e.target.value)}
             />
-            <button type="button" onClick={addNote} className="mt-2 w-full py-2 rounded-lg bg-orange-500 text-white text-sm font-medium">
-              Add note
-            </button>
-            <ul className="mt-4 space-y-2 max-h-48 overflow-y-auto">
-              {e.adminNotes?.map((n) => (
-                <li key={n._id} className="text-sm bg-gray-50 rounded-lg p-2">
-                  <p>{n.text}</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    {n.adminName} · {new Date(n.createdAt).toLocaleString()}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </section>
+            <PrimaryButton onClick={addNote} className="mt-2 w-full">
+              Add Note
+            </PrimaryButton>
+            {enquiry.adminNotes?.length > 0 && (
+              <ul className="mt-4 space-y-2 max-h-48 overflow-y-auto pr-1">
+                {enquiry.adminNotes.map((n) => (
+                  <li key={n._id} className="text-sm bg-stone-50 rounded-lg p-3 border border-stone-100">
+                    <p className="text-stone-700">{n.text}</p>
+                    <p className="text-xs text-stone-400 mt-1.5">
+                      {n.adminName} &middot; {new Date(n.createdAt).toLocaleString()}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default AdminEnquiryDetailPage;

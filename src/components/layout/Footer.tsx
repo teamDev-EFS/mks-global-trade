@@ -1,73 +1,130 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone } from 'lucide-react';
+import { Mail, Phone, MapPin, ArrowRight, Leaf } from 'lucide-react';
 import BrandLogo from '../brand/BrandLogo';
 
-const footerLinks = [
-  { to: '/products', label: 'Products' },
-  { to: '/services', label: 'Services' },
-  { to: '/about', label: 'About' },
-  { to: '/insights', label: 'Insights' },
-  { to: '/contact', label: 'Contact' },
+const navCols = [
+  {
+    title: 'Company',
+    links: [
+      { to: '/about', label: 'About Us' },
+      { to: '/services', label: 'Services' },
+      { to: '/insights', label: 'Insights' },
+      { to: '/contact', label: 'Contact' },
+    ],
+  },
+  {
+    title: 'Products',
+    links: [
+      { to: '/products', label: 'All Products' },
+      { to: '/products/vermicompost', label: 'Vermicompost' },
+      { to: '/products/jaggery', label: 'Jaggery' },
+      { to: '/products/indian-spices', label: 'Indian Spices' },
+    ],
+  },
 ];
 
 const Footer: React.FC = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-b from-emerald-950 to-[#0a1f14] text-emerald-100/95 border-t border-emerald-800/40">
-      <div className="max-w-[min(100%,1400px)] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-12 lg:justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-6 max-w-lg">
-            <div className="bg-white rounded-xl p-3 shadow-md shrink-0 ring-1 ring-white/20">
-              <BrandLogo className="h-12 sm:h-14 w-auto max-w-[180px]" alt="MSK Global Trade logo" />
+    <footer className="relative bg-[#071f15] text-emerald-100/90 overflow-hidden">
+      {/* Subtle top border gradient */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+
+      {/* Radial glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/[0.04] rounded-full blur-[100px]" />
+
+      <div className="relative max-w-[min(100%,1400px)] mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
+        {/* Main footer grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-14">
+          {/* Brand column */}
+          <div className="lg:col-span-4">
+            <Link to="/" className="inline-flex items-center gap-3 group mb-5">
+              <div className="rounded-xl bg-white p-2 shadow-md ring-1 ring-white/10">
+                <BrandLogo className="h-11 w-auto max-w-[160px]" alt="MSK Global Trade logo" />
+              </div>
+            </Link>
+            <div className="mb-4">
+              <h3 className="text-xl font-bold text-white mb-1">MSK Global Trade</h3>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-emerald-400/60">Premium Agricultural Exports</p>
             </div>
-            <div>
-              <p className="font-semibold text-white text-lg mb-2">MSK Global Trade</p>
-              <p className="text-sm text-emerald-200/90 leading-relaxed">
-                Premium agricultural exports from India — trusted quality, bulk supply, and global reach.
-              </p>
+            <p className="text-sm text-emerald-200/60 leading-relaxed max-w-sm mb-6">
+              Connecting India's finest agricultural produce with global markets through quality, sustainability, and trusted partnerships built to endure.
+            </p>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/8 border border-emerald-400/10 w-fit">
+              <Leaf className="w-4 h-4 text-emerald-400" />
+              <span className="text-xs font-medium text-emerald-300/80">Sustainable Sourcing Partner</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-16">
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-emerald-400/90 mb-4">Explore</h3>
-              <ul className="space-y-2.5">
-                {footerLinks.map((l) => (
+          {/* Nav columns */}
+          {navCols.map((col) => (
+            <div key={col.title} className="lg:col-span-2">
+              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400/70 mb-5">{col.title}</h4>
+              <ul className="space-y-3">
+                {col.links.map((l) => (
                   <li key={l.to}>
-                    <Link to={l.to} className="text-sm hover:text-white transition-colors">
+                    <Link
+                      to={l.to}
+                      className="group text-sm text-emerald-200/70 hover:text-white transition-colors inline-flex items-center gap-1.5"
+                    >
                       {l.label}
+                      <ArrowRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-emerald-400/90 mb-4">Contact</h3>
-              <ul className="space-y-3 text-sm">
-                <li className="flex items-start gap-2">
-                  <Phone className="w-4 h-4 shrink-0 mt-0.5 text-orange-400" aria-hidden />
-                  <a href="tel:+919232091060" className="hover:text-white transition-colors">
+          ))}
+
+          {/* Contact column */}
+          <div className="lg:col-span-4">
+            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400/70 mb-5">Get in Touch</h4>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <Phone className="w-4 h-4 text-emerald-400" aria-hidden />
+                </div>
+                <div>
+                  <div className="text-xs text-emerald-400/50 font-medium mb-0.5">Phone</div>
+                  <a href="tel:+919232091060" className="text-emerald-100/80 hover:text-white transition-colors">
                     +91 92320 91060
                   </a>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Mail className="w-4 h-4 shrink-0 mt-0.5 text-orange-400" aria-hidden />
-                  <a href="mailto:mskglobal26@gmail.com" className="hover:text-white transition-colors break-all">
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <Mail className="w-4 h-4 text-emerald-400" aria-hidden />
+                </div>
+                <div>
+                  <div className="text-xs text-emerald-400/50 font-medium mb-0.5">Email</div>
+                  <a href="mailto:mskglobal26@gmail.com" className="text-emerald-100/80 hover:text-white transition-colors break-all">
                     mskglobal26@gmail.com
                   </a>
-                </li>
-              </ul>
-            </div>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <MapPin className="w-4 h-4 text-emerald-400" aria-hidden />
+                </div>
+                <div>
+                  <div className="text-xs text-emerald-400/50 font-medium mb-0.5">Location</div>
+                  <span className="text-emerald-100/80">India</span>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div className="mt-10 pt-8 border-t border-emerald-800/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-emerald-400/80">
-          <p>&copy; {year} MSK Global Trade Pvt Ltd. All rights reserved.</p>
-          <div className="flex gap-6">
-            <span className="text-emerald-500/50 cursor-not-allowed">Privacy Policy</span>
-            <span className="text-emerald-500/50 cursor-not-allowed">Terms of Service</span>
+        {/* Bottom bar */}
+        <div className="pt-8 border-t border-emerald-800/30 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-emerald-500/50">
+            &copy; {year} MSK Global Trade Pvt Ltd. All rights reserved.
+          </p>
+          <div className="flex gap-6 text-xs">
+            <span className="text-emerald-600/30 cursor-not-allowed">Privacy Policy</span>
+            <span className="text-emerald-600/30 cursor-not-allowed">Terms of Service</span>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ResponsiveContainer,
@@ -15,7 +15,9 @@ import {
   Line,
   Legend,
 } from 'recharts';
+import { ArrowRight, TrendingUp, Users, CheckCircle2, Clock, XCircle, Inbox } from 'lucide-react';
 import { adminFetch } from '../../api/adminClient';
+import { Card, CardTitle, StatusBadge, LoadingState, ErrorState, PageHeader } from '../../components/admin/AdminUI';
 
 type DashboardData = {
   kpis: {
@@ -41,174 +43,182 @@ type DashboardData = {
   }[];
 };
 
-const COLORS = ['#0f766e', '#ea580c', '#ca8a04', '#2563eb', '#7c3aed', '#db2777'];
+const CHART_COLORS = ['#0d9488', '#ea580c', '#ca8a04', '#2563eb', '#7c3aed', '#db2777'];
 
-export default function AdminDashboardPage() {
+const KPI_CONFIG = [
+  { key: 'total', label: 'Total', icon: Inbox, color: 'text-stone-600', bg: 'bg-stone-50' },
+  { key: 'new', label: 'New', icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { key: 'contacted', label: 'Contacted', icon: Users, color: 'text-amber-600', bg: 'bg-amber-50' },
+  { key: 'quoted', label: 'Quoted', icon: Clock, color: 'text-purple-600', bg: 'bg-purple-50' },
+  { key: 'won', label: 'Won', icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { key: 'lost', label: 'Lost', icon: XCircle, color: 'text-red-500', bg: 'bg-red-50' },
+] as const;
+
+const AdminDashboardPage: React.FC = () => {
   const [data, setData] = useState<DashboardData | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadData = useCallback(() => {
     adminFetch<DashboardData>('/api/admin/analytics/dashboard')
       .then(setData)
-      .catch((e) => setErr(e instanceof Error ? e.message : 'Failed to load'));
+      .catch((e) => setError(e instanceof Error ? e.message : 'Failed to load'));
   }, []);
 
-  if (err) {
-    return <div className="rounded-xl bg-red-50 text-red-800 p-4">{err}</div>;
-  }
-  if (!data) {
-    return <div className="text-gray-500">Loading dashboard…</div>;
-  }
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
-  const k = data.kpis;
-  const cards = [
-    { label: 'Total Enquiries', value: k.total, color: 'bg-emerald-800' },
-    { label: 'New', value: k.new, color: 'bg-teal-600' },
-    { label: 'Contacted', value: k.contacted, color: 'bg-cyan-700' },
-    { label: 'Quoted', value: k.quoted, color: 'bg-amber-600' },
-    { label: 'Won', value: k.won, color: 'bg-green-600' },
-    { label: 'Lost', value: k.lost, color: 'bg-gray-600' },
-  ];
+  if (error) return <ErrorState message={error} onRetry={loadData} />;
+  if (!data) return <LoadingState message="Loading dashboard..." />;
 
+  const kpis = data.kpis;
   const sourceData = data.bySource.map((s) => ({
-    name: s.source?.replace(/_/g, ' ') || '—',
+    name: s.source?.replace(/_/g, ' ') || 'Unknown',
     value: s.count,
   }));
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-        <p className="text-gray-500 text-sm mt-1">Lead pipeline and regional performance</p>
-      </div>
+      <PageHeader title="Dashboard" subtitle="Lead pipeline and regional performance" />
 
+      {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-        {cards.map((c) => (
-          <div key={c.label} className={`${c.color} text-white rounded-xl p-4 shadow-md`}>
-            <p className="text-xs font-medium opacity-90">{c.label}</p>
-            <p className="text-3xl font-bold mt-1">{c.value}</p>
-          </div>
+        {KPI_CONFIG.map(({ key, label, icon: Icon, color, bg }) => (
+          <Card key={key} className="flex items-start gap-3">
+            <div className={`w-10 h-10 rounded-lg ${bg} ${color} flex items-center justify-center shrink-0`}>
+              <Icon className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-stone-500">{label}</p>
+              <p className="text-2xl font-bold text-stone-900 mt-0.5">
+                {kpis[key as keyof typeof kpis]}
+              </p>
+            </div>
+          </Card>
         ))}
       </div>
 
+      {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <h3 className="font-semibold text-gray-900 mb-4">Enquiries by country</h3>
+        <Card>
+          <CardTitle>Enquiries by Country</CardTitle>
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.byCountry.slice(0, 10)}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="country" tick={{ fontSize: 11 }} interval={0} angle={-25} textAnchor="end" height={60} />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#0f766e" radius={[4, 4, 0, 0]} />
+                <YAxis tick={{ fontSize: 11 }} />
+                <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13 }} />
+                <Bar dataKey="count" fill="#0d9488" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <h3 className="font-semibold text-gray-900 mb-4">By source</h3>
+        <Card>
+          <CardTitle>By Source</CardTitle>
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={sourceData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label>
+                <Pie data={sourceData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label={{ fontSize: 11 }}>
                   {sourceData.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                    <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip />
-                <Legend />
+                <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13 }} />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </Card>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm lg:col-span-2">
-          <h3 className="font-semibold text-gray-900 mb-4">Enquiries over time (30 days)</h3>
+        <Card className="lg:col-span-2">
+          <CardTitle>Enquiries Over Time (30 Days)</CardTitle>
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data.trend}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="_id" tick={{ fontSize: 11 }} />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="count" stroke="#ea580c" strokeWidth={2} dot={false} />
+                <YAxis tick={{ fontSize: 11 }} />
+                <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13 }} />
+                <Line type="monotone" dataKey="count" stroke="#0d9488" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </Card>
       </div>
 
+      {/* Bottom panels */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <h3 className="font-semibold text-gray-900 mb-4">Top products</h3>
-          <ul className="divide-y divide-gray-100">
+        <Card>
+          <CardTitle>Top Products</CardTitle>
+          <ul className="divide-y divide-stone-100">
             {data.byProduct.slice(0, 8).map((p) => (
-              <li key={p.product} className="py-2 flex justify-between text-sm">
-                <span className="text-gray-800">{p.product}</span>
-                <span className="font-semibold text-emerald-800">{p.count}</span>
+              <li key={p.product} className="py-2.5 flex justify-between items-center text-sm">
+                <span className="text-stone-700">{p.product}</span>
+                <span className="font-semibold text-stone-900 tabular-nums">{p.count}</span>
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-          <h3 className="font-semibold text-gray-900 mb-4">Recent activity</h3>
-          <ul className="space-y-3 max-h-72 overflow-y-auto">
+        <Card>
+          <CardTitle>Recent Activity</CardTitle>
+          <ul className="space-y-3 max-h-72 overflow-y-auto pr-1">
             {data.activity.slice(0, 15).map((a, i) => (
-              <li key={i} className="text-sm border-l-2 border-orange-400 pl-3">
-                <span className="text-gray-500 text-xs">{new Date(a.createdAt).toLocaleString()}</span>
-                <p className="text-gray-800">
-                  <span className="font-medium">{a.enquiryId}</span> · {a.customerName}
+              <li key={i} className="text-sm border-l-2 border-emerald-400 pl-3">
+                <span className="text-stone-400 text-xs">{new Date(a.createdAt).toLocaleString()}</span>
+                <p className="text-stone-700">
+                  <span className="font-medium text-stone-900">{a.enquiryId}</span> &middot; {a.customerName}
                 </p>
-                <p className="text-gray-600">{a.description}</p>
+                <p className="text-stone-500 text-xs">{a.description}</p>
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-semibold text-gray-900">Latest enquiries</h3>
-          <Link to="/admin/enquiries" className="text-sm text-orange-600 font-medium hover:underline">
-            View all
+      {/* Recent enquiries table */}
+      <Card padding={false}>
+        <div className="flex items-center justify-between px-5 pt-5 pb-3">
+          <h3 className="font-semibold text-stone-900">Latest Enquiries</h3>
+          <Link to="/admin/enquiries" className="text-sm text-emerald-700 font-medium hover:text-emerald-900 inline-flex items-center gap-1">
+            View all <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="text-left text-gray-500 border-b">
-                <th className="pb-2 pr-4">ID</th>
-                <th className="pb-2 pr-4">Customer</th>
-                <th className="pb-2 pr-4">Country</th>
-                <th className="pb-2 pr-4">Source</th>
-                <th className="pb-2">Status</th>
+              <tr className="text-left text-stone-500 border-b border-stone-100 text-xs uppercase tracking-wider">
+                <th className="px-5 pb-3 font-medium">ID</th>
+                <th className="px-5 pb-3 font-medium">Customer</th>
+                <th className="px-5 pb-3 font-medium">Country</th>
+                <th className="px-5 pb-3 font-medium">Source</th>
+                <th className="px-5 pb-3 font-medium">Status</th>
               </tr>
             </thead>
             <tbody>
               {data.recentEnquiries.map((e) => (
-                <tr key={String(e._id)} className="border-b border-gray-50">
-                  <td className="py-2 pr-4 font-mono text-xs">
-                    <Link to={`/admin/enquiries/${e._id}`} className="text-orange-600 hover:underline">
+                <tr key={String(e._id)} className="border-b border-stone-50 hover:bg-stone-50/60 transition-colors">
+                  <td className="px-5 py-3 font-mono text-xs">
+                    <Link to={`/admin/enquiries/${e._id}`} className="text-emerald-700 font-semibold hover:text-emerald-900">
                       {String(e.enquiryId)}
                     </Link>
                   </td>
-                  <td className="py-2 pr-4">{String(e.customerName)}</td>
-                  <td className="py-2 pr-4">{String(e.country || '—')}</td>
-                  <td className="py-2 pr-4">{String(e.sourceType || '').replace(/_/g, ' ')}</td>
-                  <td className="py-2">
-                    <span className="inline-flex px-2 py-0.5 rounded-full bg-gray-100 text-xs font-medium">
-                      {String(e.status)}
-                    </span>
+                  <td className="px-5 py-3 text-stone-700">{String(e.customerName)}</td>
+                  <td className="px-5 py-3 text-stone-500">{String(e.country || '—')}</td>
+                  <td className="px-5 py-3 text-stone-500 capitalize">{String(e.sourceType || '').replace(/_/g, ' ')}</td>
+                  <td className="px-5 py-3">
+                    <StatusBadge value={String(e.status)} />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </Card>
     </div>
   );
-}
+};
+
+export default AdminDashboardPage;

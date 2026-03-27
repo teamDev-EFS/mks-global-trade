@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { adminFetch } from '../../api/adminClient';
+import { Bell, CheckCheck, ExternalLink } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { adminFetch } from '../../api/adminClient';
+import { Card, PageHeader, LoadingState, EmptyState, PrimaryButton, SecondaryButton } from '../../components/admin/AdminUI';
 
-type Row = {
+type NotificationRow = {
   _id: string;
   type: string;
   title: string;
@@ -13,115 +15,131 @@ type Row = {
   enquiryId?: { _id: string; enquiryId: string; customerName?: string; country?: string };
 };
 
-export default function AdminNotificationsPage() {
-  const [filter, setFilter] = useState<'all' | 'unread'>('unread');
-  const [items, setItems] = useState<Row[]>([]);
+type FilterType = 'all' | 'unread';
+
+const AdminNotificationsPage: React.FC = () => {
+  const [filter, setFilter] = useState<FilterType>('unread');
+  const [items, setItems] = useState<NotificationRow[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const load = () => {
+  const loadNotifications = useCallback(() => {
     setLoading(true);
-    const q = filter === 'unread' ? '?filter=unread' : '';
-    adminFetch<{ items: Row[] }>(`/api/admin/notifications${q}`)
+    const query = filter === 'unread' ? '?filter=unread' : '';
+    adminFetch<{ items: NotificationRow[] }>(`/api/admin/notifications${query}`)
       .then((r) => setItems(r.items))
       .catch((e) => toast.error(e instanceof Error ? e.message : 'Failed'))
       .finally(() => setLoading(false));
-  };
-
-  useEffect(() => {
-    load();
   }, [filter]);
 
-  const markRead = async (id: string) => {
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  const markAsRead = useCallback(async (id: string) => {
     try {
       await adminFetch(`/api/admin/notifications/${id}/read`, { method: 'PATCH' });
-      toast.success('Marked read');
-      load();
+      toast.success('Marked as read');
+      loadNotifications();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Error');
     }
-  };
+  }, [loadNotifications]);
 
-  const markAll = async () => {
+  const markAllAsRead = useCallback(async () => {
     try {
       await adminFetch('/api/admin/notifications/read-all', { method: 'PATCH' });
-      toast.success('All marked read');
-      load();
+      toast.success('All marked as read');
+      loadNotifications();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Error');
     }
-  };
+  }, [loadNotifications]);
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Notifications</h2>
-          <p className="text-gray-500 text-sm">New enquiries and updates</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setFilter('unread')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${filter === 'unread' ? 'bg-emerald-800 text-white' : 'bg-white border border-gray-200'}`}
-          >
-            Unread
-          </button>
-          <button
-            type="button"
-            onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${filter === 'all' ? 'bg-emerald-800 text-white' : 'bg-white border border-gray-200'}`}
-          >
-            All
-          </button>
-          <button
-            type="button"
-            onClick={markAll}
-            className="px-4 py-2 rounded-lg text-sm font-medium bg-orange-500 text-white hover:bg-orange-600"
-          >
-            Mark all read
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm divide-y divide-gray-100">
-        {loading ? (
-          <p className="p-8 text-gray-500">Loading…</p>
-        ) : items.length === 0 ? (
-          <p className="p-8 text-gray-500">No notifications</p>
-        ) : (
-          items.map((n) => {
-            const enq = n.enquiryId && typeof n.enquiryId === 'object' ? n.enquiryId : null;
-            const href = enq?._id ? `/admin/enquiries/${enq._id}` : '#';
-            return (
-              <div
-                key={n._id}
-                className={`p-4 flex flex-col sm:flex-row sm:items-start gap-4 ${!n.isRead ? 'bg-orange-50/50' : ''}`}
+      <PageHeader
+        title="Notifications"
+        subtitle="New enquiries and updates"
+        actions={
+          <div className="flex flex-wrap gap-2">
+            {(['unread', 'all'] as const).map((f) => (
+              <SecondaryButton
+                key={f}
+                onClick={() => setFilter(f)}
+                className={filter === f ? 'bg-[#0F3D2E] text-white border-[#0F3D2E] hover:bg-[#0d3526]' : ''}
               >
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900">{n.title}</p>
-                  <p className="text-sm text-gray-600 mt-1">{n.message}</p>
-                  <p className="text-xs text-gray-400 mt-2">{new Date(n.createdAt).toLocaleString()}</p>
+                {f === 'unread' ? 'Unread' : 'All'}
+              </SecondaryButton>
+            ))}
+            <PrimaryButton onClick={markAllAsRead} className="inline-flex items-center gap-1.5">
+              <CheckCheck className="w-4 h-4" />
+              Mark all read
+            </PrimaryButton>
+          </div>
+        }
+      />
+
+      <Card padding={false}>
+        {loading ? (
+          <LoadingState />
+        ) : items.length === 0 ? (
+          <EmptyState message="No notifications" icon={<Bell className="w-8 h-8" />} />
+        ) : (
+          <div className="divide-y divide-stone-100">
+            {items.map((notification) => {
+              const enquiry = notification.enquiryId && typeof notification.enquiryId === 'object'
+                ? notification.enquiryId
+                : null;
+
+              return (
+                <div
+                  key={notification._id}
+                  className={`px-5 py-4 flex flex-col sm:flex-row sm:items-start gap-4 transition-colors ${
+                    !notification.isRead ? 'bg-emerald-50/40' : ''
+                  }`}
+                >
+                  {/* Indicator */}
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    {!notification.isRead && (
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                    )}
+                    <div className="min-w-0">
+                      <p className="font-semibold text-stone-900 text-sm">{notification.title}</p>
+                      <p className="text-sm text-stone-500 mt-1">{notification.message}</p>
+                      <p className="text-xs text-stone-400 mt-2">
+                        {new Date(notification.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2 shrink-0">
+                    {enquiry?._id && (
+                      <Link
+                        to={`/admin/enquiries/${enquiry._id}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0F3D2E] text-white text-xs font-medium hover:bg-[#0d3526] transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        Open
+                      </Link>
+                    )}
+                    {!notification.isRead && (
+                      <SecondaryButton
+                        onClick={() => markAsRead(notification._id)}
+                        className="px-3 py-1.5 text-xs"
+                      >
+                        Mark read
+                      </SecondaryButton>
+                    )}
+                  </div>
                 </div>
-                <div className="flex gap-2 shrink-0">
-                  {enq?._id ? (
-                    <Link
-                      to={href}
-                      className="px-3 py-1.5 rounded-lg bg-emerald-800 text-white text-sm font-medium"
-                    >
-                      Open enquiry
-                    </Link>
-                  ) : null}
-                  {!n.isRead ? (
-                    <button type="button" onClick={() => markRead(n._id)} className="px-3 py-1.5 rounded-lg border border-gray-300 text-sm">
-                      Mark read
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-            );
-          })
+              );
+            })}
+          </div>
         )}
-      </div>
+      </Card>
     </div>
   );
-}
+};
+
+export default AdminNotificationsPage;

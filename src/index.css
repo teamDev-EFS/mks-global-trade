@@ -61,4 +61,66 @@ body {
   .animate-msk-pulse-soft {
     animation: msk-pulse-soft 4s ease-in-out infinite;
   }
+
+  /* Premium About page animations */
+  .perspective-1200 {
+    perspective: 1200px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+
+  @keyframes msk-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes msk-scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes msk-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  @keyframes msk-draw-line {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  .animate-msk-fade-up {
+    animation: msk-fade-up 0.7s ease-out both;
+  }
+  .animate-msk-scale-in {
+    animation: msk-scale-in 0.6s ease-out both;
+  }
+  .animate-msk-shimmer {
+    background-size: 200% 100%;
+    animation: msk-shimmer 3s linear infinite;
+  }
 }

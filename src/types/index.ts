@@ -30,6 +30,8 @@ export interface Testimonial {
   name: string;
   feedback: string;
   avatar: string;
+  /** Optional organisation label (B2B context). */
+  company?: string;
 }
 
 export interface TeamMember {

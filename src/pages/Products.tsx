@@ -20,19 +20,9 @@ import { trackWhatsAppClick } from '../lib/analytics';
 const Products: React.FC = () => {
   const productsMeta = getStaticPageMeta('products');
   const {
-    search,
-    setSearch,
-    categoryFilter,
-    setCategoryFilter,
-    variantFilter,
-    setVariantFilter,
-    tagFilter,
-    setTagFilter,
-    sortKey,
-    setSortKey,
-    filteredProducts,
-    clearFilters,
-    activeFilterCount,
+    search, setSearch, categoryFilter, setCategoryFilter,
+    variantFilter, setVariantFilter, tagFilter, setTagFilter,
+    sortKey, setSortKey, filteredProducts, clearFilters, activeFilterCount,
   } = useProductCatalogFilters(allProducts);
 
   const { inquiryList, addProduct, removeProduct, clearList } = useInquiryList();
@@ -41,12 +31,7 @@ const Products: React.FC = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const handleEnquirySubmit = async (details: {
-    name: string;
-    email: string;
-    phone: string;
-    quantity: string;
-    location: string;
-    message: string;
+    name: string; email: string; phone: string; quantity: string; location: string; message: string;
   }) => {
     try {
       await submitPublicEnquiry({
@@ -57,16 +42,12 @@ const Products: React.FC = () => {
         whatsappNumber: details.phone.trim(),
         location: details.location.trim(),
         message: details.message.trim(),
-        products:
-          inquiryList.length > 0
-            ? inquiryList.map((item) => ({
-                productId: item.product.id,
-                productName: item.product.name,
-                category: item.product.category,
-                variant: item.variant,
-                quantity: item.quantity,
-              }))
-            : [],
+        products: inquiryList.length > 0
+          ? inquiryList.map((item) => ({
+              productId: item.product.id, productName: item.product.name,
+              category: item.product.category, variant: item.variant, quantity: item.quantity,
+            }))
+          : [],
       });
       toast.success('Enquiry saved');
     } catch (e) {
@@ -74,68 +55,48 @@ const Products: React.FC = () => {
       return;
     }
 
-    let text: string;
-    if (inquiryList.length > 0) {
-      const lines = inquiryList
-        .map(
-          (item) =>
-            `- ${item.product.name} (${item.product.category})${item.variant ? ` · ${item.variant}` : ''}`
-        )
-        .join('\n');
-      text =
-        `Hello MSK Global Trade,\n\nI am interested in these products:\n${lines}\n\n` +
-        `Quantity: ${details.quantity}\nLocation: ${details.location}\n\n` +
-        `My details:\nName: ${details.name}\nEmail: ${details.email}\nPhone: ${details.phone}\n\n` +
-        `Message: ${details.message || 'N/A'}\n\nThank you.`;
-    } else {
-      text =
-        `Hello MSK Global Trade,\n\nGeneral product enquiry.\n\n` +
-        `Quantity: ${details.quantity}\nLocation: ${details.location}\n\n` +
-        `My details:\nName: ${details.name}\nEmail: ${details.email}\nPhone: ${details.phone}\n\n` +
-        `Message: ${details.message || 'N/A'}\n\nThank you.`;
-    }
-    trackWhatsAppClick('products_inquiry_list', {
-      product_count: String(inquiryList.length),
-    });
+    const lines = inquiryList.length > 0
+      ? inquiryList.map((item) => `- ${item.product.name} (${item.product.category})${item.variant ? ` · ${item.variant}` : ''}`).join('\n')
+      : '';
+    const text = inquiryList.length > 0
+      ? `Hello MSK Global Trade,\n\nI am interested in these products:\n${lines}\n\nQuantity: ${details.quantity}\nLocation: ${details.location}\n\nName: ${details.name}\nEmail: ${details.email}\nPhone: ${details.phone}\n\nMessage: ${details.message || 'N/A'}\n\nThank you.`
+      : `Hello MSK Global Trade,\n\nGeneral product enquiry.\n\nQuantity: ${details.quantity}\nLocation: ${details.location}\n\nName: ${details.name}\nEmail: ${details.email}\nPhone: ${details.phone}\n\nMessage: ${details.message || 'N/A'}\n\nThank you.`;
+
+    trackWhatsAppClick('products_inquiry_list', { product_count: String(inquiryList.length) });
     window.open(`https://wa.me/919232091060?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
     setEnquiryOpen(false);
   };
 
   const filterFormProps = {
-    search,
-    setSearch,
-    categoryFilter,
-    setCategoryFilter,
-    variantFilter,
-    setVariantFilter,
-    tagFilter,
-    setTagFilter,
-    onClear: clearFilters,
+    search, setSearch, categoryFilter, setCategoryFilter,
+    variantFilter, setVariantFilter, tagFilter, setTagFilter, onClear: clearFilters,
   };
 
   return (
-    <div className="bg-ivory-50 min-h-screen">
+    <div className="min-h-screen bg-[#FAF7F2]">
       <Seo {...productsMeta} />
       <ProductsHero />
+
       <main
         id="main-content"
-        className="max-w-[min(100%,1400px)] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 md:gap-8"
+        className="max-w-[min(100%,1400px)] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-6 md:gap-8"
         tabIndex={-1}
       >
+        {/* Sidebar */}
         <aside
-          className="hidden md:block w-full md:w-64 bg-white rounded-2xl p-4 sm:p-5 shadow-md border border-gray-100/80 sticky top-20 self-start"
+          className="hidden md:block w-full md:w-64 bg-white rounded-2xl p-5 shadow-sm border border-stone-200/60 sticky top-24 self-start"
           aria-label="Product filters"
         >
           <ProductsFiltersSidebar {...filterFormProps} />
         </aside>
 
+        {/* Main content */}
         <section
           className={`flex-1 flex flex-col min-w-0 ${inquiryList.length > 0 ? 'pb-24 sm:pb-20' : ''}`}
           aria-labelledby="products-heading"
         >
-          <h2 id="products-heading" className="sr-only">
-            Product catalogue
-          </h2>
+          <h2 id="products-heading" className="sr-only">Product catalogue</h2>
+
           <ProductsToolbar
             sortKey={sortKey}
             setSortKey={setSortKey}
@@ -147,7 +108,7 @@ const Products: React.FC = () => {
           />
 
           {filteredProducts.length === 0 ? (
-            <EmptyProductsState />
+            <EmptyProductsState onReset={clearFilters} />
           ) : (
             <ProductGrid
               products={filteredProducts}
@@ -160,30 +121,10 @@ const Products: React.FC = () => {
         </section>
       </main>
 
-      <ProductsMobileFiltersDrawer
-        open={mobileFiltersOpen}
-        onClose={() => setMobileFiltersOpen(false)}
-        {...filterFormProps}
-      />
-
-      <InquiryListDrawer
-        inquiryList={inquiryList}
-        clearList={clearList}
-        openEnquiryModal={() => setEnquiryOpen(true)}
-      />
-
-      {quickViewProduct && (
-        <QuickViewModal product={quickViewProduct} onClose={() => setQuickViewProduct(null)} />
-      )}
-
-      {enquiryOpen && (
-        <ProductEnquiryModal
-          product={null}
-          inquiryList={inquiryList}
-          onClose={() => setEnquiryOpen(false)}
-          onSubmit={handleEnquirySubmit}
-        />
-      )}
+      <ProductsMobileFiltersDrawer open={mobileFiltersOpen} onClose={() => setMobileFiltersOpen(false)} {...filterFormProps} />
+      <InquiryListDrawer inquiryList={inquiryList} clearList={clearList} openEnquiryModal={() => setEnquiryOpen(true)} />
+      {quickViewProduct && <QuickViewModal product={quickViewProduct} onClose={() => setQuickViewProduct(null)} />}
+      {enquiryOpen && <ProductEnquiryModal product={null} inquiryList={inquiryList} onClose={() => setEnquiryOpen(false)} onSubmit={handleEnquirySubmit} />}
     </div>
   );
 };

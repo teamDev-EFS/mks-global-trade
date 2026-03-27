@@ -7,6 +7,9 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }
       <img src={testimonial.avatar} alt={testimonial.name} className="w-16 h-16 rounded-full mb-3" />
       <p className="text-gray-700 mb-2">“{testimonial.feedback}”</p>
       <div className="font-semibold text-green-900">{testimonial.name}</div>
+      {testimonial.company ? (
+        <div className="text-sm text-gray-500 mt-0.5">{testimonial.company}</div>
+      ) : null}
     </div>
   );
 };
