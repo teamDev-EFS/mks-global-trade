@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { X, Shield } from 'lucide-react';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -40,6 +40,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, toggleMenu }) => {
             {link.label}
           </Link>
         ))}
+        <Link
+          to="/admin/login"
+          onClick={toggleMenu}
+          className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-emerald-900 border border-emerald-800/25 hover:bg-emerald-50"
+        >
+          <Shield className="w-4 h-4" aria-hidden />
+          Admin login
+        </Link>
         <Link
           to="/contact"
           onClick={toggleMenu}

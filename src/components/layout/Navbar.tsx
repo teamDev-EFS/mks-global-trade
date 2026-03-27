@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { Menu, Shield } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 
 const navLinks = [
@@ -15,8 +15,8 @@ const Navbar: React.FC = () => {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100 shadow-md">
-      <nav className="max-w-[1240px] mx-auto px-6 sm:px-10 flex items-center justify-between h-20">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100/80 shadow-sm">
+      <nav className="max-w-[min(100%,1400px)] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between min-h-[64px] py-2 md:h-16">
         <Link to="/" className="flex items-center text-2xl font-extrabold text-green-800 tracking-tight">
           <span className="bg-gradient-to-r from-green-700 to-emerald-500 bg-clip-text text-transparent">MSK Global Trade</span>
         </Link>
@@ -34,8 +34,15 @@ const Navbar: React.FC = () => {
             </Link>
           ))}
           <Link
+            to="/admin/login"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium text-emerald-900 border border-emerald-800/25 hover:bg-emerald-50 transition-colors"
+          >
+            <Shield className="w-4 h-4" aria-hidden />
+            Admin
+          </Link>
+          <Link
             to="/contact"
-            className="ml-4 px-6 py-2 rounded-full font-semibold bg-orange-500 text-white shadow-lg hover:bg-orange-600 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-orange-400"
+            className="ml-2 px-6 py-2 rounded-full font-semibold bg-orange-500 text-white shadow-lg hover:bg-orange-600 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-orange-400"
           >
             Get Quote
           </Link>

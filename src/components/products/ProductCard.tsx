@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Product } from '../../types';
+import { InquiryListItem } from '../../store/useInquiryList';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
+import { WhatsAppActionButton } from '../ui/WhatsAppActionButton';
 import ProductEnquiryModal from './ProductEnquiryModal';
-
-const WhatsAppIcon = () => (
-  <svg viewBox="0 0 32 32" className="w-5 h-5 fill-green-600" aria-hidden="true" focusable="false">
-    <path d="M16 .4C7.5.4.4 7.5.4 16c0 2.8.7 5.4 2.1 7.7L0 32l8.6-2.5c2.2 1.2 4.7 1.9 7.4 1.9 8.5 0 15.6-7.1 15.6-15.6S24.5.4 16 .4zm0 28.6c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-5.1 1.5 1.4-5-.3-.5C3.6 20.7 3 18.4 3 16 3 8.8 8.8 3 16 3s13 5.8 13 13-5.8 13-13 13zm7.2-9.8c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.7-.2-1 .2-.3.4-1.1 1.3-1.3 1.5-.2.2-.5.3-.9.1-.4-.2-1.6-.6-3-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8.2-.2.4-.5.6-.7.2-.2.3-.4.5-.7.2-.3.1-.6 0-.8-.1-.2-1-2.4-1.4-3.3-.4-.9-.8-.8-1-.8h-.9c-.3 0-.8.1-1.2.6-.4.4-1.6 1.6-1.6 3.9s1.7 4.6 1.9 4.9c.2.3 3.4 5.1 8.2 7.1 1.1.5 2 .8 2.7 1 .9.3 1.7.3 2.3.2.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.4-.3-.8-.5z"/>
-  </svg>
-);
+import { submitPublicEnquiry } from '../../lib/publicEnquiryApi';
 
 interface ProductCardProps {
   product: Product;
-  inquiryList?: Product[];
+  inquiryList?: InquiryListItem[];
   addProduct?: (product: Product) => void;
   removeProduct?: (productId: string) => void;
   openQuickView?: (product: Product) => void;
@@ -23,7 +22,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], ad
 
   // Defensive check for inquiryList
   const safeInquiryList = Array.isArray(inquiryList) ? inquiryList : [];
-  const isInInquiryList = safeInquiryList.some((p) => p.id === product.id);
+  const isInInquiryList = safeInquiryList.some((item) => item.product.id === product.id);
 
   // Compose WhatsApp message for enquiry modal
   const composeMessage = (userDetails: { name: string; email: string; phone: string; quantity: string; location: string; message: string }) => {
@@ -36,7 +35,38 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], ad
       `Additional Message: ${userDetails.message || 'N/A'}%0A%0AThank you.`;
   };
 
-  const handleWhatsAppEnquiry = (userDetails: { name: string; email: string; phone: string; quantity: string; location: string; message: string }) => {
+  const handleWhatsAppEnquiry = async (userDetails: {
+    name: string;
+    email: string;
+    phone: string;
+    quantity: string;
+    location: string;
+    message: string;
+  }) => {
+    try {
+      await submitPublicEnquiry({
+        sourceType: 'product_modal',
+        customerName: userDetails.name.trim(),
+        email: userDetails.email.trim(),
+        phone: userDetails.phone.trim(),
+        whatsappNumber: userDetails.phone.trim(),
+        location: userDetails.location.trim(),
+        message: userDetails.message.trim(),
+        products: [
+          {
+            productId: product.id,
+            productName: product.name,
+            category: product.category,
+            variant: product.variants[0] || '',
+            quantity: userDetails.quantity,
+          },
+        ],
+      });
+      toast.success('Enquiry saved — we will contact you shortly');
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Could not save enquiry');
+      return;
+    }
     const message = composeMessage(userDetails);
     const whatsappUrl = `https://wa.me/919232091060?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -60,7 +90,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], ad
         />
       </div>
       <div className="p-6 flex flex-col flex-grow">
-        <h3 className="text-lg font-semibold text-deepGreen-900 mb-1">{product.name}</h3>
+        <div className="flex items-start justify-between gap-2 mb-1">
+          <h3 className="text-lg font-semibold text-deepGreen-900">{product.name}</h3>
+          <Link
+            to={`/products/${product.slug}`}
+            className="text-xs font-semibold text-orange-600 hover:text-orange-700 whitespace-nowrap shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 rounded"
+          >
+            Details →
+          </Link>
+        </div>
         <p className="text-sm text-deepGreen-700 mb-2">{product.category}</p>
         <ul className="flex flex-col gap-1 flex-grow mb-3">
           {product.highlights.slice(0, 3).map((highlight, idx) => (
@@ -80,32 +118,33 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, inquiryList = [], ad
           ))}
         </div>
         <p className="text-sm text-deepGreen-900 font-semibold mb-4">Packing: {product.packing}</p>
-        <div className="mt-auto flex items-center justify-between">
+        <div className="mt-auto flex flex-col gap-2.5 w-full">
           {isInInquiryList && removeProduct && addProduct ? (
             <Button
               variant="secondary"
+              className="w-full justify-center"
               onClick={() => removeProduct(product.id)}
               aria-label={`Remove ${product.name} from inquiry list`}
             >
-              Remove Inquiry
+              Remove from inquiry list
             </Button>
           ) : addProduct ? (
             <Button
               variant="primary"
+              className="w-full justify-center"
               onClick={() => addProduct(product)}
               aria-label={`Add ${product.name} to inquiry list`}
             >
               Add to Inquiry
             </Button>
           ) : null}
-          <Button
-            variant="tertiary"
+          <WhatsAppActionButton
+            className="w-full"
             onClick={() => setEnquiryOpen(true)}
-            aria-label={`WhatsApp enquiry for ${product.name}`}
-            className="flex items-center gap-2 text-orange-500 hover:text-orange-600"
+            aria-label={`Start WhatsApp enquiry for ${product.name}`}
           >
-            <WhatsAppIcon /> WhatsApp Enquiry
-          </Button>
+            WhatsApp enquiry
+          </WhatsAppActionButton>
         </div>
       </div>
 

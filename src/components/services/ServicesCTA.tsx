@@ -10,7 +10,7 @@ const whatsappUrl =
 
 const ServicesCTA: React.FC = () => {
   return (
-    <section className="bg-gradient-to-r from-green-700 via-emerald-600 to-green-900 py-12 mt-10">
+    <section id="services-cta" className="scroll-mt-28 bg-gradient-to-r from-green-700 via-emerald-600 to-green-900 py-12 mt-10">
       <div className="max-w-[900px] mx-auto px-4 sm:px-8 text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Looking for a reliable export partner?</h2>
         <p className="text-lg text-white/90 mb-8">Contact us today to discuss your requirements and get a custom export solution.</p>

@@ -26,10 +26,10 @@ const services = [
 
 const ServicesOverview: React.FC = () => {
   return (
-    <section className="py-16 bg-[#F8F6F3]">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-green-900 mb-8 text-center">Our Core Services</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    <section id="core-services" className="scroll-mt-28 py-10 sm:py-12 bg-[#F8F6F3]">
+      <div className="max-w-[min(100%,1200px)] mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-green-900 mb-6 text-center">Our Core Services</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {services.map((service, idx) => (
             <div
               key={service.title}

@@ -24,3 +24,41 @@ body {
   background-color: var(--background);
   color: var(--text-primary);
 }
+
+@layer utilities {
+  @keyframes msk-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  @keyframes msk-orbit {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes msk-pulse-soft {
+    0%,
+    100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 0.85;
+    }
+  }
+  .animate-msk-float {
+    animation: msk-float 5s ease-in-out infinite;
+  }
+  .animate-msk-orbit {
+    animation: msk-orbit 18s linear infinite;
+  }
+  .animate-msk-pulse-soft {
+    animation: msk-pulse-soft 4s ease-in-out infinite;
+  }
+}

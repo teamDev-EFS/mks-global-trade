@@ -1,140 +1,76 @@
 import React from 'react';
-import { Search, LayoutGrid, List, X } from 'lucide-react';
+import { SlidersHorizontal, ListFilter } from 'lucide-react';
+import type { ProductSortKey } from '../../hooks/useProductCatalogFilters';
 
 interface ProductsToolbarProps {
-  search: string;
-  setSearch: (v: string) => void;
-  category: string;
-  setCategory: (v: string) => void;
-  variant: string;
-  setVariant: (v: string) => void;
-  sort: string;
-  setSort: (v: string) => void;
-  view: 'grid' | 'list';
-  setView: (v: 'grid' | 'list') => void;
-  productCount: number;
-  onOpenFilters: () => void;
-  onClearFilters: () => void;
-  tags: string[];
-  setTags: (tags: string[]) => void;
+  sortKey: ProductSortKey;
+  setSortKey: (k: ProductSortKey) => void;
+  inquiryCount: number;
+  resultCount: number;
+  totalCount: number;
+  onOpenMobileFilters?: () => void;
+  activeFilterCount?: number;
 }
 
-const categories = [
-  'All',
-  'Agro Products',
-  'Food Products',
-  'Fresh Vegetables',
-  'Spices',
-  'Natural Minerals',
-  'Seasonal Products',
-];
-const variants = [
-  '',
-  'Solid',
-  'Cube',
-  'Powder',
-  'Flakes',
-  'Seeds',
-  'Fresh',
-];
-const sortOptions = [
-  'Default',
-  'Product Name A-Z',
-  'Product Name Z-A',
-  'Category',
-  'Export Priority',
-  'Newest',
-  'Popular Inquiry',
-];
-
 const ProductsToolbar: React.FC<ProductsToolbarProps> = ({
-  search,
-  setSearch,
-  category,
-  setCategory,
-  variant,
-  setVariant,
-  sort,
-  setSort,
-  view,
-  setView,
-  productCount,
-  onOpenFilters,
-  onClearFilters,
+  sortKey,
+  setSortKey,
+  inquiryCount,
+  resultCount,
+  totalCount,
+  onOpenMobileFilters,
+  activeFilterCount = 0,
 }) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white rounded-xl shadow-sm border border-gray-100 px-4 py-3 sticky top-4 z-20">
-      <div className="flex flex-1 items-center gap-2">
-        <div className="relative w-full max-w-xs">
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="pl-9 pr-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 text-sm w-full"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            aria-label="Search products"
-          />
+    <div className="flex flex-col gap-3 bg-white rounded-xl shadow-sm border border-gray-100 px-3 sm:px-4 py-3 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center justify-between gap-3 min-w-0">
+          <div className="flex items-center gap-2 text-sm text-gray-600 min-w-0">
+            <SlidersHorizontal className="w-4 h-4 text-emerald-700 shrink-0" aria-hidden />
+            <span className="truncate">
+              <span className="font-semibold text-gray-900">{resultCount}</span>
+              <span className="text-gray-500"> / {totalCount} products</span>
+            </span>
+          </div>
+          {onOpenMobileFilters ? (
+            <button
+              type="button"
+              onClick={onOpenMobileFilters}
+              className="md:hidden inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-emerald-800/30 text-emerald-900 text-sm font-medium bg-emerald-50/80 hover:bg-emerald-100 shrink-0"
+            >
+              <ListFilter className="w-4 h-4" aria-hidden />
+              Filters
+              {activeFilterCount > 0 ? (
+                <span className="min-w-[1.25rem] h-5 px-1 rounded-full bg-orange-500 text-white text-[10px] font-bold flex items-center justify-center">
+                  {activeFilterCount}
+                </span>
+              ) : null}
+            </button>
+          ) : null}
         </div>
-        <select
-          className="ml-2 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
-          value={category}
-          onChange={e => setCategory(e.target.value)}
-        >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
-        <select
-          className="ml-2 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
-          value={variant}
-          onChange={e => setVariant(e.target.value)}
-        >
-          {variants.map((v) => (
-            <option key={v} value={v}>{v || 'All Variants'}</option>
-          ))}
-        </select>
-        <button
-          className="ml-2 px-3 py-2 rounded-lg border border-gray-200 text-sm bg-gray-50 hover:bg-orange-50 transition-all md:hidden"
-          onClick={onOpenFilters}
-          type="button"
-        >
-          Filters
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="product-sort" className="sr-only">
+            Sort products
+          </label>
+          <select
+            id="product-sort"
+            className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white min-w-[180px]"
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value as ProductSortKey)}
+          >
+            <option value="inquiryPriority">Export priority</option>
+            <option value="name">Name (A–Z)</option>
+          </select>
+          {inquiryCount > 0 ? (
+            <span className="inline-flex items-center rounded-full bg-orange-100 text-orange-800 text-xs font-semibold px-3 py-1.5 border border-orange-200">
+              {inquiryCount} in inquiry list
+            </span>
+          ) : null}
+        </div>
       </div>
-      <div className="flex items-center gap-2 mt-2 md:mt-0">
-        <select
-          className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
-          value={sort}
-          onChange={e => setSort(e.target.value)}
-        >
-          {sortOptions.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </select>
-        <button
-          className={`ml-2 p-2 rounded-lg border border-gray-200 ${view === 'grid' ? 'bg-orange-100 text-orange-700' : 'bg-white text-gray-700'} hover:bg-orange-50 transition-all`}
-          onClick={() => setView('grid')}
-          aria-label="LayoutGrid view"
-        >
-          <LayoutGrid className="w-5 h-5" />
-        </button>
-        <button
-          className={`p-2 rounded-lg border border-gray-200 ${view === 'list' ? 'bg-orange-100 text-orange-700' : 'bg-white text-gray-700'} hover:bg-orange-50 transition-all`}
-          onClick={() => setView('list')}
-          aria-label="List view"
-        >
-          <List className="w-5 h-5" />
-        </button>
-        <button
-          className="ml-2 px-3 py-2 rounded-lg border border-gray-200 text-sm bg-gray-50 hover:bg-orange-50 transition-all flex items-center gap-1"
-          onClick={onClearFilters}
-          type="button"
-        >
-          <X className="w-4 h-4" /> Clear Filters
-        </button>
-        <span className="ml-4 text-sm text-gray-500 hidden md:inline">Showing <span className="font-semibold text-green-700">{productCount}</span> products</span>
-      </div>
+      <p className="text-xs text-gray-500 hidden sm:block">
+        Sort by export priority (featured order) or alphabetically. Filters apply to the list below.
+      </p>
     </div>
   );
 };

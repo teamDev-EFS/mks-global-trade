@@ -1,5 +1,7 @@
 import React from 'react';
-import { X, MessageCircle, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, Plus } from 'lucide-react';
+import { WhatsAppActionLink } from '../ui/WhatsAppActionButton';
 import { Product } from '../../types';
 import { useInquiryList } from '../../store/useInquiryList';
 
@@ -22,21 +24,51 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose }) => 
     if (product) setSelectedVariant(product.variants[0] || 'N/A');
   }, [product]);
 
+  React.useEffect(() => {
+    if (!product) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [product, onClose]);
+
   if (!product) return null;
   const added = isInInquiryList(product.id, selectedVariant);
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full relative overflow-hidden">
-        <button className="absolute top-3 right-3 p-2 rounded hover:bg-gray-100" onClick={onClose} aria-label="X">
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 p-4"
+      role="presentation"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quick-view-title"
+        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full relative overflow-hidden max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          className="absolute top-3 right-3 p-2 rounded hover:bg-gray-100"
+          onClick={onClose}
+          aria-label="Close"
+        >
           <X className="w-6 h-6 text-gray-700" />
         </button>
         <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2 flex items-center justify-center p-6">
-            <img src={product.image} alt={product.name} className="w-64 h-64 object-cover rounded-xl border" />
+            <img
+              src={product.image || `/images/products/${product.slug}.jpg`}
+              alt={product.name}
+              className="w-64 h-64 object-cover rounded-xl border"
+            />
           </div>
           <div className="md:w-1/2 p-6 flex flex-col">
-            <h2 className="text-2xl font-bold text-green-900 mb-2">{product.name}</h2>
+            <h2 id="quick-view-title" className="text-2xl font-bold text-green-900 mb-2">
+              {product.name}
+            </h2>
             <div className="text-xs text-gray-400 mb-2">{product.category}</div>
             {product.variants && product.variants.length > 1 && (
               <select
@@ -49,6 +81,13 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose }) => 
                 ))}
               </select>
             )}
+            <Link
+              to={`/products/${product.slug}`}
+              onClick={onClose}
+              className="mb-3 inline-block text-sm font-semibold text-emerald-800 hover:text-orange-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 rounded"
+            >
+              Open full product page →
+            </Link>
             <div className="mb-3 text-gray-700 text-sm">{product.description}</div>
             <ul className="mb-3 space-y-1 text-sm text-gray-700">
               {product.highlights.map((point, idx) => (
@@ -64,6 +103,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose }) => 
             <div className="mb-2 text-xs text-gray-500"><span className="font-medium text-green-700">Export:</span> {product.exportMarkets.join(', ')}</div>
             <div className="flex gap-2 mt-4">
               <button
+                type="button"
                 className={`flex-1 flex items-center justify-center px-3 py-2 rounded-lg font-semibold text-sm shadow transition-all group ${added ? 'bg-emerald-100 text-emerald-700 border border-emerald-200 cursor-not-allowed' : 'bg-orange-500 text-white hover:bg-orange-600'}`}
                 onClick={() => !added && addToInquiryList(product, selectedVariant)}
                 disabled={added}
@@ -71,15 +111,15 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose }) => 
               >
                 <Plus className="w-4 h-4 mr-1" /> {added ? 'Added' : 'Add to Inquiry List'}
               </button>
-              <a
+              <WhatsAppActionLink
                 href={getWhatsAppUrl(product, selectedVariant)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-all text-sm shadow"
-                aria-label="WhatsApp Inquiry"
+                className="flex-1 text-center min-h-[44px]"
+                aria-label="Open WhatsApp with this product"
               >
-                <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp
-              </a>
+                WhatsApp
+              </WhatsAppActionLink>
             </div>
           </div>
         </div>

@@ -13,10 +13,15 @@ export interface InquiryListItem {
 interface InquiryListState {
   inquiryList: InquiryListItem[];
   addToInquiryList: (product: Product, variant: string) => void;
+  /** Adds product with its first variant (convenience for product cards). */
+  addProduct: (product: Product) => void;
   removeFromInquiryList: (productId: string, variant: string) => void;
+  /** Removes first matching line item for this product id. */
+  removeProduct: (productId: string) => void;
   isInInquiryList: (productId: string, variant: string) => boolean;
   updateInquiryItem: (productId: string, variant: string, update: Partial<InquiryListItem>) => void;
   clearInquiryList: () => void;
+  clearList: () => void;
 }
 
 export const useInquiryList = create<InquiryListState>()(
@@ -36,12 +41,20 @@ export const useInquiryList = create<InquiryListState>()(
           }));
         }
       },
+      addProduct: (product) => {
+        const variant = product.variants[0] || 'Standard';
+        get().addToInquiryList(product, variant);
+      },
       removeFromInquiryList: (productId, variant) => {
         set((state) => ({
           inquiryList: state.inquiryList.filter(
             (item) => !(item.product.id === productId && item.variant === variant)
           ),
         }));
+      },
+      removeProduct: (productId) => {
+        const item = get().inquiryList.find((i) => i.product.id === productId);
+        if (item) get().removeFromInquiryList(productId, item.variant);
       },
       isInInquiryList: (productId, variant) => {
         return get().inquiryList.some(
@@ -58,6 +71,7 @@ export const useInquiryList = create<InquiryListState>()(
         }));
       },
       clearInquiryList: () => set({ inquiryList: [] }),
+      clearList: () => set({ inquiryList: [] }),
     }),
     { name: 'inquiry-list' }
   )

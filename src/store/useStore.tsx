@@ -12,6 +12,8 @@ interface Product {
 interface Inquiry {
   id: string;
   name: string;
+  email: string;
+  phone: string;
   product: string;
   quantity: number;
   location: string;

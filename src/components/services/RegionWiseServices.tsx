@@ -17,7 +17,7 @@ const uaeServices = [
 
 const RegionWiseServices: React.FC = () => {
   return (
-    <section className="py-14 bg-white border-y border-gray-100">
+    <section id="regions" className="scroll-mt-28 py-14 bg-white border-y border-gray-100">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-8">
         <h2 className="text-2xl md:text-3xl font-bold text-green-900 mb-8 text-center">Region-wise Export Capabilities</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

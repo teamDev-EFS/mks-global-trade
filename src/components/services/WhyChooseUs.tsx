@@ -26,7 +26,7 @@ const reasons = [
 
 const WhyChooseUs: React.FC = () => {
   return (
-    <section className="py-14 bg-white border-y border-gray-100">
+    <section id="why-services" className="scroll-mt-28 py-14 bg-white border-y border-gray-100">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-8">
         <h2 className="text-2xl md:text-3xl font-bold text-green-900 mb-8 text-center">Why Choose MSK Global Trade?</h2>
         <div className="flex flex-wrap justify-center gap-8">

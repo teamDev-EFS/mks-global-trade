@@ -1,91 +1,141 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { products as allProducts } from '../data/products';
-import { Product } from '../types';
 import ProductsHero from '../components/products/ProductsHero';
 import ProductsToolbar from '../components/products/ProductsToolbar';
 import ProductsFiltersSidebar from '../components/products/ProductsFiltersSidebar';
+import ProductsMobileFiltersDrawer from '../components/products/ProductsMobileFiltersDrawer';
 import ProductGrid from '../components/products/ProductGrid';
 import InquiryListDrawer from '../components/products/InquiryListDrawer';
 import QuickViewModal from '../components/products/QuickViewModal';
 import EmptyProductsState from '../components/products/EmptyProductsState';
 import { useInquiryList } from '../store/useInquiryList';
 import ProductEnquiryModal from '../components/products/ProductEnquiryModal';
+import { submitPublicEnquiry } from '../lib/publicEnquiryApi';
+import { toast } from 'react-toastify';
+import { useProductCatalogFilters } from '../hooks/useProductCatalogFilters';
 
 const Products: React.FC = () => {
-  // Filter/sort/search state
-  const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const [variantFilter, setVariantFilter] = useState<string | null>(null);
-  const [tagFilter, setTagFilter] = useState<string | null>(null);
-  const [sortKey, setSortKey] = useState<'name' | 'inquiryPriority'>('inquiryPriority');
+  const {
+    search,
+    setSearch,
+    categoryFilter,
+    setCategoryFilter,
+    variantFilter,
+    setVariantFilter,
+    tagFilter,
+    setTagFilter,
+    sortKey,
+    setSortKey,
+    filteredProducts,
+    clearFilters,
+    activeFilterCount,
+  } = useProductCatalogFilters(allProducts);
 
-  // Inquiry list state
   const { inquiryList, addProduct, removeProduct, clearList } = useInquiryList();
-
-  // Quick view modal
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
-
-  // Product enquiry modal
-  const [enquiryProduct, setEnquiryProduct] = useState<Product | null>(null);
+  const [quickViewProduct, setQuickViewProduct] = useState<(typeof allProducts)[number] | null>(null);
   const [enquiryOpen, setEnquiryOpen] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  // Filter and sort products
-  const filteredProducts = useMemo(() => {
-    let filtered = allProducts;
-    if (search.trim()) {
-      const lower = search.toLowerCase();
-      filtered = filtered.filter(
-        (p) =>
-          p.name.toLowerCase().includes(lower) ||
-          p.category.toLowerCase().includes(lower) ||
-          p.tags.some((tag) => tag.toLowerCase().includes(lower))
-      );
+  const handleEnquirySubmit = async (details: {
+    name: string;
+    email: string;
+    phone: string;
+    quantity: string;
+    location: string;
+    message: string;
+  }) => {
+    try {
+      await submitPublicEnquiry({
+        sourceType: 'inquiry_list',
+        customerName: details.name.trim(),
+        email: details.email.trim(),
+        phone: details.phone.trim(),
+        whatsappNumber: details.phone.trim(),
+        location: details.location.trim(),
+        message: details.message.trim(),
+        products:
+          inquiryList.length > 0
+            ? inquiryList.map((item) => ({
+                productId: item.product.id,
+                productName: item.product.name,
+                category: item.product.category,
+                variant: item.variant,
+                quantity: item.quantity,
+              }))
+            : [],
+      });
+      toast.success('Enquiry saved');
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Could not save enquiry');
+      return;
     }
-    if (categoryFilter) {
-      filtered = filtered.filter((p) => p.category === categoryFilter);
-    }
-    if (variantFilter) {
-      filtered = filtered.filter((p) => p.variants.includes(variantFilter));
-    }
-    if (tagFilter) {
-      filtered = filtered.filter((p) => p.tags.includes(tagFilter));
-    }
-    if (sortKey === 'name') {
-      filtered = filtered.slice().sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortKey === 'inquiryPriority') {
-      filtered = filtered.slice().sort((a, b) => a.inquiryPriority - b.inquiryPriority);
-    }
-    return filtered;
-  }, [search, categoryFilter, variantFilter, tagFilter, sortKey]);
 
-  const openEnquiryModal = (product: Product) => {
-    setEnquiryProduct(product);
-    setEnquiryOpen(true);
+    let text: string;
+    if (inquiryList.length > 0) {
+      const lines = inquiryList
+        .map(
+          (item) =>
+            `- ${item.product.name} (${item.product.category})${item.variant ? ` · ${item.variant}` : ''}`
+        )
+        .join('\n');
+      text =
+        `Hello MSK Global Trade,\n\nI am interested in these products:\n${lines}\n\n` +
+        `Quantity: ${details.quantity}\nLocation: ${details.location}\n\n` +
+        `My details:\nName: ${details.name}\nEmail: ${details.email}\nPhone: ${details.phone}\n\n` +
+        `Message: ${details.message || 'N/A'}\n\nThank you.`;
+    } else {
+      text =
+        `Hello MSK Global Trade,\n\nGeneral product enquiry.\n\n` +
+        `Quantity: ${details.quantity}\nLocation: ${details.location}\n\n` +
+        `My details:\nName: ${details.name}\nEmail: ${details.email}\nPhone: ${details.phone}\n\n` +
+        `Message: ${details.message || 'N/A'}\n\nThank you.`;
+    }
+    window.open(`https://wa.me/919232091060?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+    setEnquiryOpen(false);
+  };
+
+  const filterFormProps = {
+    search,
+    setSearch,
+    categoryFilter,
+    setCategoryFilter,
+    variantFilter,
+    setVariantFilter,
+    tagFilter,
+    setTagFilter,
+    onClear: clearFilters,
   };
 
   return (
-    <div className="bg-ivory-50 min-h-screen py-12 px-6 sm:px-10">
-      <div className="max-w-[1240px] mx-auto flex flex-col md:flex-row gap-8">
-        {/* Sidebar Filters */}
-        <aside className="w-full md:w-64 bg-white rounded-[20px] p-6 shadow-lg sticky top-24 self-start">
-          <ProductsFiltersSidebar
-            search={search}
-            setSearch={setSearch}
-            categoryFilter={categoryFilter}
-            setCategoryFilter={setCategoryFilter}
-            variantFilter={variantFilter}
-            setVariantFilter={setVariantFilter}
-            tagFilter={tagFilter}
-            setTagFilter={setTagFilter}
-          />
+    <div className="bg-ivory-50 min-h-screen">
+      <ProductsHero />
+      <main
+        id="main-content"
+        className="max-w-[min(100%,1400px)] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col md:flex-row gap-6 md:gap-8"
+        tabIndex={-1}
+      >
+        <aside
+          className="hidden md:block w-full md:w-64 bg-white rounded-2xl p-4 sm:p-5 shadow-md border border-gray-100/80 sticky top-20 self-start"
+          aria-label="Product filters"
+        >
+          <ProductsFiltersSidebar {...filterFormProps} />
         </aside>
 
-        {/* Main content */}
-        <section className="flex-1 flex flex-col">
+        <section
+          className={`flex-1 flex flex-col min-w-0 ${inquiryList.length > 0 ? 'pb-24 sm:pb-20' : ''}`}
+          aria-labelledby="products-heading"
+        >
+          <h2 id="products-heading" className="sr-only">
+            Product catalogue
+          </h2>
           <ProductsToolbar
             sortKey={sortKey}
             setSortKey={setSortKey}
             inquiryCount={inquiryList.length}
+            resultCount={filteredProducts.length}
+            totalCount={allProducts.length}
+            onOpenMobileFilters={() => setMobileFiltersOpen(true)}
+            activeFilterCount={activeFilterCount}
           />
 
           {filteredProducts.length === 0 ? (
@@ -97,38 +147,33 @@ const Products: React.FC = () => {
               addProduct={addProduct}
               removeProduct={removeProduct}
               openQuickView={setQuickViewProduct}
-              openEnquiryModal={openEnquiryModal}
             />
           )}
         </section>
-      </div>
+      </main>
 
-      {/* Inquiry List Drawer */}
-      <InquiryListDrawer
-        inquiryList={inquiryList}
-        removeProduct={removeProduct}
-        clearList={clearList}
-        openEnquiryModal={() => {
-          setEnquiryProduct(null); // null means inquiry list flow
-          setEnquiryOpen(true);
-        }}
+      <ProductsMobileFiltersDrawer
+        open={mobileFiltersOpen}
+        onClose={() => setMobileFiltersOpen(false)}
+        {...filterFormProps}
       />
 
-      {/* Quick View Modal */}
+      <InquiryListDrawer
+        inquiryList={inquiryList}
+        clearList={clearList}
+        openEnquiryModal={() => setEnquiryOpen(true)}
+      />
+
       {quickViewProduct && (
-        <QuickViewModal
-          product={quickViewProduct}
-          onClose={() => setQuickViewProduct(null)}
-          openEnquiryModal={openEnquiryModal}
-        />
+        <QuickViewModal product={quickViewProduct} onClose={() => setQuickViewProduct(null)} />
       )}
 
-      {/* Product Enquiry Modal */}
       {enquiryOpen && (
         <ProductEnquiryModal
-          product={enquiryProduct}
+          product={null}
           inquiryList={inquiryList}
           onClose={() => setEnquiryOpen(false)}
+          onSubmit={handleEnquirySubmit}
         />
       )}
     </div>

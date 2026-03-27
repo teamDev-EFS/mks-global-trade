@@ -26,7 +26,7 @@ const steps = [
 
 const ProcessFlow: React.FC = () => {
   return (
-    <section className="py-16 bg-[#F8F6F3]">
+    <section id="export-process" className="scroll-mt-28 py-16 bg-[#F8F6F3]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-8">
         <h2 className="text-2xl md:text-3xl font-bold text-green-900 mb-8 text-center">How Our Export Process Works</h2>
         <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-0">

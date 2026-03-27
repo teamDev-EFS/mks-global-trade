@@ -17,7 +17,8 @@ export const products: Product[] = [
     packing: '25kg / 50kg',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=400&fit=crop',
     featured: true,
     inquiryPriority: 1,
     description:
@@ -39,7 +40,8 @@ export const products: Product[] = [
     packing: 'Custom',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1576394435759-02a2674ff6e0?w=600&h=400&fit=crop',
     featured: true,
     inquiryPriority: 2,
     description:
@@ -61,7 +63,8 @@ export const products: Product[] = [
     packing: 'Various sizes',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&h=400&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1489806149968-aee262986b40?w=600&h=400&fit=crop',
     featured: true,
     inquiryPriority: 3,
     description:
@@ -83,7 +86,8 @@ export const products: Product[] = [
     packing: 'Seeds / Powder',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1528613526328-8c19bd037322?w=600&h=400&fit=crop',
     featured: true,
     inquiryPriority: 4,
     description:
@@ -105,7 +109,8 @@ export const products: Product[] = [
     packing: 'Various sizes',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1704650311263-4563a029bd9e?w=600&h=400&fit=crop',
     featured: true,
     inquiryPriority: 5,
     description:
@@ -127,7 +132,8 @@ export const products: Product[] = [
     packing: 'Bulk',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=600&h=400&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1601876818790-33a0783ec542?w=600&h=400&fit=crop',
     featured: false,
     inquiryPriority: 6,
     description:
@@ -149,7 +155,8 @@ export const products: Product[] = [
     packing: 'Custom',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'Seasonal',
-    image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=600&h=400&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=400&fit=crop',
     featured: false,
     inquiryPriority: 7,
     description:
@@ -171,7 +178,8 @@ export const products: Product[] = [
     packing: 'Bulk',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?w=600&h=400&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1639402480805-ea8ef529e028?w=600&h=400&fit=crop',
     featured: false,
     inquiryPriority: 8,
     description:
@@ -193,7 +201,8 @@ export const products: Product[] = [
     packing: 'Bulk',
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
-    image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=600&h=400&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=600&h=400&fit=crop',
     featured: false,
     inquiryPriority: 9,
     description:
