@@ -22,13 +22,13 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, toggleMenu }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-0 z-[100] transition-all duration-300 ${
         isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
     >
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-[#0F3D2E]/20 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-black/50 backdrop-blur-md transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={toggleMenu}
