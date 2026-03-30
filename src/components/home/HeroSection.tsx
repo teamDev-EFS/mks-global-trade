@@ -1,58 +1,71 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, ArrowRight, Globe2, ShieldCheck, TrendingUp, Leaf, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  CheckCircle2,
+  ArrowRight,
+  Globe2,
+  ShieldCheck,
+  TrendingUp,
+  Leaf,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import productImageOnion from '../../assets/Onion.webp';
 
 /* ── Carousel slides — agriculture, export, spices, logistics ── */
 const SLIDES = [
   {
-    src: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=85',
-    alt: 'Golden wheat fields at sunrise representing premium Indian agricultural exports',
-    caption: 'Premium Agricultural Sourcing',
+    src: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=85",
+    alt: "Golden wheat fields at sunrise representing premium Indian agricultural exports",
+    caption: "Premium Agricultural Sourcing",
     sub: "Direct from India's finest farmlands",
   },
   {
-    src: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=85',
-    alt: 'Colorful Indian spices in market showcasing export-grade spice varieties',
-    caption: 'Export-Grade Indian Spices',
-    sub: 'Aromatic, lab-tested, globally certified',
+    src: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=85",
+    alt: "Colorful Indian spices in market showcasing export-grade spice varieties",
+    caption: "Export-Grade Indian Spices",
+    sub: "Aromatic, lab-tested, globally certified",
   },
   {
-    src: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=85',
-    alt: 'Shipping containers at international port for global agricultural trade',
-    caption: 'Global Logistics Network',
-    sub: 'Reliable delivery to 50+ countries',
+    src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=85",
+    alt: "Shipping containers at international port for global agricultural trade",
+    caption: "Global Logistics Network",
+    sub: "Reliable delivery to 50+ countries",
   },
   {
-    src: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=1200&q=85',
-    alt: 'Organic farming and sustainable agriculture practices in India',
-    caption: 'Sustainable & Organic',
-    sub: 'Eco-friendly farming at scale',
+    src: productImageOnion,
+    alt: "Organic farming and sustainable agriculture practices in India",
+    caption: "Sustainable & Organic",
+    sub: "Eco-friendly farming at scale",
   },
   {
-    src: 'https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1200&q=85',
-    alt: 'Modern warehouse with export-ready packaged agricultural products',
-    caption: 'Export-Ready Packaging',
-    sub: 'Hygienic processing & custom labeling',
+    src: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1200&q=85",
+    alt: "Modern warehouse with export-ready packaged agricultural products",
+    caption: "Export-Ready Packaging",
+    sub: "Hygienic processing & custom labeling",
   },
 ] as const;
 
 const INTERVAL_MS = 5000;
 
 const trustItems = [
-  { icon: ShieldCheck, label: 'Export Quality Certified' },
-  { icon: Leaf, label: 'Sustainable Sourcing' },
-  { icon: TrendingUp, label: 'Bulk Supply Ready' },
+  { icon: ShieldCheck, label: "Export Quality Certified" },
+  { icon: Leaf, label: "Sustainable Sourcing" },
+  { icon: TrendingUp, label: "Bulk Supply Ready" },
 ];
 
 const HeroSection: React.FC = () => {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
 
-  const goTo = useCallback((idx: number) => {
-    setDirection(idx > current ? 1 : -1);
-    setCurrent(idx);
-  }, [current]);
+  const goTo = useCallback(
+    (idx: number) => {
+      setDirection(idx > current ? 1 : -1);
+      setCurrent(idx);
+    },
+    [current],
+  );
 
   const next = useCallback(() => {
     setDirection(1);
@@ -85,8 +98,8 @@ const HeroSection: React.FC = () => {
             initial={{ opacity: 0, scale: 1.08 }}
             animate={{ opacity: 1, scale: 1.03 }}
             exit={{ opacity: 0, scale: 1 }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
-            fetchPriority={current === 0 ? 'high' : undefined}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            fetchPriority={current === 0 ? "high" : undefined}
             decoding="async"
           />
         </AnimatePresence>
@@ -100,15 +113,25 @@ const HeroSection: React.FC = () => {
         <div
           className="absolute inset-0 opacity-[0.02]"
           style={{
-            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
           }}
         />
       </div>
 
       {/* ── Decorative geometry ── */}
-      <div className="absolute top-[10%] right-[8%] w-[400px] h-[400px] border border-emerald-400/[0.04] rounded-full" aria-hidden />
-      <div className="absolute top-[15%] right-[12%] w-[300px] h-[300px] border border-emerald-400/[0.03] rounded-full" aria-hidden />
-      <div className="absolute bottom-[15%] left-[5%] w-[200px] h-[200px] border border-emerald-400/[0.03] rounded-full" aria-hidden />
+      <div
+        className="absolute top-[10%] right-[8%] w-[400px] h-[400px] border border-emerald-400/[0.04] rounded-full"
+        aria-hidden
+      />
+      <div
+        className="absolute top-[15%] right-[12%] w-[300px] h-[300px] border border-emerald-400/[0.03] rounded-full"
+        aria-hidden
+      />
+      <div
+        className="absolute bottom-[15%] left-[5%] w-[200px] h-[200px] border border-emerald-400/[0.03] rounded-full"
+        aria-hidden
+      />
 
       {/* ── Content ── */}
       <div className="relative z-10 mx-auto w-full max-w-[min(100%,1400px)] px-4 py-20 sm:px-6 sm:py-24 md:py-28 lg:px-8 lg:py-32">
@@ -148,8 +171,9 @@ const HeroSection: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mt-6 max-w-lg text-[1.05rem] leading-relaxed text-emerald-100/55 sm:text-lg"
             >
-              Delivering export-grade agricultural products with reliable bulk supply,
-              global logistics, and unmatched consistency — trusted by buyers across 50+ countries.
+              Delivering export-grade agricultural products with reliable bulk
+              supply, global logistics, and unmatched consistency — trusted by
+              buyers across 50+ countries.
             </motion.p>
 
             <motion.div
@@ -191,7 +215,10 @@ const HeroSection: React.FC = () => {
                   key={label}
                   className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3.5 py-2 text-[13px] font-medium text-emerald-100/60"
                 >
-                  <Icon className="w-4 h-4 shrink-0 text-emerald-400/70" aria-hidden />
+                  <Icon
+                    className="w-4 h-4 shrink-0 text-emerald-400/70"
+                    aria-hidden
+                  />
                   {label}
                 </div>
               ))}
@@ -221,7 +248,7 @@ const HeroSection: React.FC = () => {
                       exit={{ opacity: 0, x: direction * -40, scale: 0.98 }}
                       transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
                       className="absolute inset-0 w-full h-full object-cover"
-                      loading={current === 0 ? 'eager' : 'lazy'}
+                      loading={current === 0 ? "eager" : "lazy"}
                       decoding="async"
                     />
                   </AnimatePresence>
@@ -239,8 +266,12 @@ const HeroSection: React.FC = () => {
                         exit={{ opacity: 0, y: -6 }}
                         transition={{ duration: 0.4 }}
                       >
-                        <p className="text-white font-bold text-sm sm:text-base">{slide.caption}</p>
-                        <p className="text-white/60 text-xs sm:text-sm">{slide.sub}</p>
+                        <p className="text-white font-bold text-sm sm:text-base">
+                          {slide.caption}
+                        </p>
+                        <p className="text-white/60 text-xs sm:text-sm">
+                          {slide.sub}
+                        </p>
                       </motion.div>
                     </AnimatePresence>
                   </div>
@@ -274,15 +305,17 @@ const HeroSection: React.FC = () => {
                         type="button"
                         onClick={() => goTo(i)}
                         aria-label={`Go to slide ${i + 1}`}
-                        className={`h-1.5 rounded-full transition-all duration-500 ${
-                          i === current ? 'w-6 bg-emerald-400' : 'w-1.5 bg-white/20 hover:bg-white/40'
-                        }`}
+                        className={`h-1.5 rounded-full transition-all duration-500 ${i === current
+                          ? "w-6 bg-emerald-400"
+                          : "w-1.5 bg-white/20 hover:bg-white/40"
+                          }`}
                       />
                     ))}
                   </div>
                   {/* Counter */}
                   <span className="text-[11px] font-medium text-white/30 tabular-nums">
-                    {String(current + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
+                    {String(current + 1).padStart(2, "0")} /{" "}
+                    {String(SLIDES.length).padStart(2, "0")}
                   </span>
                 </div>
               </div>
@@ -295,16 +328,20 @@ const HeroSection: React.FC = () => {
                 className="mt-5 grid grid-cols-3 gap-3"
               >
                 {[
-                  { value: '50+', label: 'Countries' },
-                  { value: '1000+', label: 'Tons/Year' },
-                  { value: '10+', label: 'Years' },
+                  { value: "50+", label: "Countries" },
+                  { value: "1000+", label: "Tons/Year" },
+                  { value: "10+", label: "Years" },
                 ].map((stat) => (
                   <div
                     key={stat.label}
                     className="text-center rounded-xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm py-3 px-2"
                   >
-                    <div className="text-lg sm:text-xl font-extrabold text-emerald-300">{stat.value}</div>
-                    <div className="text-[10px] font-medium text-white/35 uppercase tracking-wider">{stat.label}</div>
+                    <div className="text-lg sm:text-xl font-extrabold text-emerald-300">
+                      {stat.value}
+                    </div>
+                    <div className="text-[10px] font-medium text-white/35 uppercase tracking-wider">
+                      {stat.label}
+                    </div>
                   </div>
                 ))}
               </motion.div>
@@ -314,7 +351,10 @@ const HeroSection: React.FC = () => {
       </div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#FAF7F2] to-transparent z-20" aria-hidden />
+      <div
+        className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#FAF7F2] to-transparent z-20"
+        aria-hidden
+      />
     </section>
   );
 };

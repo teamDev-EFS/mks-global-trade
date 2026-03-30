@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, ArrowRight, Leaf } from 'lucide-react';
+import { Mail, Phone, MapPin, ArrowRight, Leaf, Linkedin, Instagram } from 'lucide-react';
 import BrandLogo from '../brand/BrandLogo';
 
 const navCols = [
@@ -52,9 +52,30 @@ const Footer: React.FC = () => {
             <p className="text-sm text-emerald-200/60 leading-relaxed max-w-sm mb-6">
               Connecting India's finest agricultural produce with global markets through quality, sustainability, and trusted partnerships built to endure.
             </p>
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/8 border border-emerald-400/10 w-fit">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/8 border border-emerald-400/10 w-fit mb-5">
               <Leaf className="w-4 h-4 text-emerald-400" />
               <span className="text-xs font-medium text-emerald-300/80">Sustainable Sourcing Partner</span>
+            </div>
+            {/* Social links */}
+            <div className="flex items-center gap-3">
+              <a
+                href="https://www.linkedin.com/in/msk-global-trade-1987123ba"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-400/10 flex items-center justify-center text-emerald-400/70 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-400/25 transition-all"
+                aria-label="Follow MSK Global Trade on LinkedIn"
+              >
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.instagram.com/mskglobal26?igsh=MWs2emQ3MzVmd2NyZw=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-400/10 flex items-center justify-center text-emerald-400/70 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-400/25 transition-all"
+                aria-label="Follow MSK Global Trade on Instagram"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
             </div>
           </div>
 
