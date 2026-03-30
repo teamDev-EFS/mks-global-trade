@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { X, Shield, ArrowRight } from 'lucide-react';
 import BrandLogo from '../brand/BrandLogo';
@@ -20,15 +21,16 @@ const navLinks = [
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, toggleMenu }) => {
   const location = useLocation();
 
-  return (
+  const menu = (
     <div
-      className={`fixed inset-0 z-[100] transition-all duration-300 ${
+      className={`fixed inset-0 transition-all duration-300 ${
         isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
+      style={{ zIndex: 9999 }}
     >
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-black/50 backdrop-blur-md transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={toggleMenu}
@@ -39,6 +41,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, toggleMenu }) => {
         className={`absolute inset-y-0 left-0 w-full max-w-sm bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
+        style={{ zIndex: 10000 }}
       >
         {/* Header */}
         <div className="flex justify-between items-center px-5 py-4 border-b border-stone-100">
@@ -102,6 +105,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, toggleMenu }) => {
       </div>
     </div>
   );
+
+  return createPortal(menu, document.body) as React.ReactElement;
 };
 
 export default MobileMenu;
