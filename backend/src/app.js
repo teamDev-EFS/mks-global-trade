@@ -33,6 +33,20 @@ app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 app.use(cookieParser());
 app.use(express.json({ limit: '512kb' }));
 
+/** Root URL — Vercel/browser visits to https://…vercel.app/ otherwise get Express default "Cannot GET /". */
+app.get('/', (req, res) => {
+  res.json({
+    name: 'MSK Global Trade API',
+    message:
+      'Backend only. The marketing site is deployed separately (e.g. Netlify); point VITE_API_URL to this origin.',
+    endpoints: {
+      health: 'GET /api/health',
+      enquiry: 'POST /api/enquiries',
+      admin: '/api/admin/*',
+    },
+  });
+});
+
 app.use('/api', publicRoutes);
 app.use('/api/admin', adminRoutes);
 
