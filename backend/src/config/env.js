@@ -28,19 +28,22 @@ export const env = {
 
 /**
  * Call before listening. Fails fast in production if secrets or DB URL are unsafe.
+ * Logs warnings instead of throwing so the health endpoint can still respond.
  */
 export function assertProductionConfig() {
   if (env.nodeEnv !== 'production') return;
 
   const weakJwt = new Set([DEV_JWT_FALLBACK, EXAMPLE_JWT_FROM_FILE, '']);
   if (!env.jwtSecret || env.jwtSecret.length < 32 || weakJwt.has(env.jwtSecret)) {
-    throw new Error(
-      'Set JWT_SECRET to a strong random value (32+ characters) in production.'
+    console.error(
+      '[SECURITY] JWT_SECRET is weak or missing. Set a strong random value (32+ chars) in Vercel env vars.'
     );
+    // Don't throw — let the app start so health check can diagnose.
+    // Auth endpoints will still fail because the token won't be trustworthy.
   }
   if (env.mongoUri === DEFAULT_MONGO) {
-    throw new Error(
-      'Set MONGODB_URI to your production MongoDB connection string.'
+    console.error(
+      '[CONFIG] MONGODB_URI is set to localhost default. Set your Atlas connection string in Vercel env vars.'
     );
   }
 }

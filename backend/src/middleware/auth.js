@@ -8,7 +8,16 @@ export async function requireAuth(req, res, next) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     const token = h.slice(7);
-    const decoded = verifyToken(token);
+    let decoded;
+    try {
+      decoded = verifyToken(token);
+    } catch (jwtErr) {
+      const msg =
+        jwtErr.name === 'TokenExpiredError'
+          ? 'Token expired'
+          : 'Invalid token';
+      return res.status(401).json({ error: msg });
+    }
     const admin = await Admin.findById(decoded.sub).select('-passwordHash');
     if (!admin || !admin.isActive) {
       return res.status(401).json({ error: 'Account inactive or not found' });
@@ -16,8 +25,8 @@ export async function requireAuth(req, res, next) {
     req.admin = admin;
     req.adminId = admin._id;
     next();
-  } catch {
-    return res.status(401).json({ error: 'Invalid or expired token' });
+  } catch (err) {
+    next(err);
   }
 }
 

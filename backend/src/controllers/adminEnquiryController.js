@@ -99,6 +99,9 @@ export async function patchEnquiry(req, res, next) {
     }
     if (Array.isArray(tags)) e.tags = tags;
     if (assignedTo !== undefined) {
+      if (assignedTo && !mongoose.Types.ObjectId.isValid(assignedTo)) {
+        return res.status(400).json({ error: 'Invalid assignedTo ID' });
+      }
       e.assignedTo = assignedTo ? new mongoose.Types.ObjectId(assignedTo) : null;
       if (assignedTo) {
         e.timeline.push({

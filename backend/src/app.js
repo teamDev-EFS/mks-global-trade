@@ -18,11 +18,11 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || env.frontendUrls.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(null, false);
-      }
+      // Allow requests with no origin (server-to-server, Netlify proxy, curl, health checks)
+      if (!origin) return callback(null, true);
+      if (env.frontendUrls.includes(origin)) return callback(null, true);
+      // Reject unknown browser origins
+      callback(null, false);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
@@ -33,12 +33,11 @@ app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 app.use(cookieParser());
 app.use(express.json({ limit: '512kb' }));
 
-/** Root URL — Vercel/browser visits to https://…vercel.app/ otherwise get Express default "Cannot GET /". */
-app.get('/', (req, res) => {
+/** Root URL — prevents "Cannot GET /" on direct Vercel visits. */
+app.get('/', (_req, res) => {
   res.json({
     name: 'MSK Global Trade API',
-    message:
-      'Backend only. The marketing site is deployed separately (e.g. Netlify); point VITE_API_URL to this origin.',
+    status: 'ok',
     endpoints: {
       health: 'GET /api/health',
       enquiry: 'POST /api/enquiries',

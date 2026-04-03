@@ -13,13 +13,28 @@ async function getHandler() {
   if (cachedHandler) return cachedHandler;
   assertProductionConfig();
   await connectDb();
-  cachedHandler = serverless(app, {
-    binary: false,
-  });
+  cachedHandler = serverless(app, { binary: false });
   return cachedHandler;
 }
 
 export default async function handler(req, res) {
-  const h = await getHandler();
-  return h(req, res);
+  try {
+    const h = await getHandler();
+    return h(req, res);
+  } catch (err) {
+    console.error('[Serverless cold-start failure]', err);
+    // Clear cached handler so next invocation retries
+    cachedHandler = null;
+    res.statusCode = 503;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(
+      JSON.stringify({
+        error: 'Service temporarily unavailable',
+        reason:
+          process.env.NODE_ENV === 'production'
+            ? 'Backend initialization failed. Check logs.'
+            : err.message,
+      })
+    );
+  }
 }
