@@ -61,8 +61,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 7s timeout — fail before Vercel's 10s kill
-    const h = await withTimeout(getHandler(), 7000);
+    // 8s timeout — fail before Vercel's 10s kill
+    const h = await withTimeout(getHandler(), 8000);
     return h(req, res);
   } catch (err) {
     console.error('[handler error]', err.message);
