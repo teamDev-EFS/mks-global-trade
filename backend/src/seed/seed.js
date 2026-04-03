@@ -9,8 +9,8 @@ import { hashPassword } from '../utils/password.js';
 
 dotenv.config();
 
-const adminEmail = process.env.ADMIN_DEFAULT_EMAIL || 'admin@mskglobaltrade.com';
-const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'ChangeMe123!';
+const adminEmail = process.env.ADMIN_DEFAULT_EMAIL || 'operations@mskglobaltrade.com';
+const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'MskVijay452010!';
 
 async function run() {
   await mongoose.connect(env.mongoUri);

@@ -14,14 +14,20 @@
 # Netlify UI checklist (Site settings → Environment variables)
 # Set BEFORE first deploy or trigger "Clear cache and deploy" after changing:
 #
-#   VITE_SITE_URL              = https://your-site.netlify.app  (no trailing slash)
-#                              Use your custom domain once connected.
-#   VITE_API_URL               = https://your-api.example.com   (backend base URL; no /api suffix unless your client expects it)
-#   VITE_GA_MEASUREMENT_ID     = G-XXXXXXXXXX                   (optional, GA4)
-#   VITE_GOOGLE_SITE_VERIFICATION = ...                        (optional, Search Console)
+#   VITE_SITE_URL              = https://www.mskglobaltrade.com
+#   VITE_API_URL               = https://msk-global-trade-backend.vercel.app
+#   VITE_GA_MEASUREMENT_ID     = G-XXXXXXXXXX  (optional, GA4)
+#   VITE_GOOGLE_SITE_VERIFICATION = ...         (optional, Search Console)
 #
 # Vite inlines VITE_* at build time — redeploy after any change.
 # -----------------------------------------------------------------------------
+
+# Proxy /api/* requests to the Vercel backend — avoids CORS issues in production
+[[redirects]]
+  from = "/api/*"
+  to = "https://msk-global-trade-backend.vercel.app/api/:splat"
+  status = 200
+  force = true
 
 # SPA: React Router — non-file routes must serve index.html
 [[redirects]]
@@ -34,3 +40,11 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

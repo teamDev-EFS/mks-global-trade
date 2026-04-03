@@ -11,9 +11,12 @@ import { hashPassword } from '../utils/password.js';
 
 dotenv.config();
 
-const email = (process.env.ADMIN_EMAIL || 'admin@mskglobaltrade.com').toLowerCase().trim();
+const email = (process.env.ADMIN_EMAIL || process.env.ADMIN_DEFAULT_EMAIL || 'operations@mskglobaltrade.com')
+  .toLowerCase()
+  .trim();
 const password =
   process.env.ADMIN_PASSWORD ||
+  process.env.ADMIN_DEFAULT_PASSWORD ||
   crypto.randomBytes(18).toString('base64url').slice(0, 22);
 
 async function main() {

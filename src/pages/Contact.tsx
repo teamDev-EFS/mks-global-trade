@@ -12,6 +12,7 @@ import Seo from '../components/seo/Seo';
 import { ContactPageJsonLd } from '../components/seo/JsonLd';
 import { getStaticPageMeta } from '../seo/pageMeta';
 import { trackContactFormSubmit, trackWhatsAppClick } from '../lib/analytics';
+import { BRAND } from '../seo/siteConfig';
 
 const WHATSAPP = '919232091060';
 
@@ -119,7 +120,7 @@ const Contact: React.FC = () => {
               <ul className="space-y-4 text-sm text-gray-700">
                 <li className="flex gap-3">
                   <MapPin className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" aria-hidden />
-                  <span>123 Export Lane, Trade City, India</span>
+                  <span>{BRAND.officeAddressLine}</span>
                 </li>
                 <li className="flex gap-3">
                   <Phone className="w-5 h-5 text-orange-500 shrink-0" aria-hidden />

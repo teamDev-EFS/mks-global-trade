@@ -28,6 +28,10 @@ export function OrganizationJsonLd() {
     telephone: BRAND.phone,
     address: {
       '@type': 'PostalAddress',
+      streetAddress: 'Vijaynagar',
+      addressLocality: 'Indore',
+      addressRegion: 'Madhya Pradesh',
+      postalCode: '452010',
       addressCountry: 'IN',
     },
     areaServed: BRAND.areaServed.map((name) => ({ '@type': 'Place', name })),
@@ -97,6 +101,14 @@ export function ContactPageJsonLd() {
       name: BRAND.name,
       email: BRAND.email,
       telephone: BRAND.phone,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'VijayNagar',
+        addressLocality: 'Indore',
+        addressRegion: 'Madhya Pradesh',
+        postalCode: '452010',
+        addressCountry: 'IN',
+      },
       areaServed: BRAND.areaServed,
     },
   };

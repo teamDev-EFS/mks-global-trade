@@ -7,7 +7,7 @@ export function getSiteUrl(): string {
   if (typeof window !== 'undefined') {
     return `${window.location.protocol}//${window.location.host}`;
   }
-  return 'https://msk-global-trade.example.com';
+  return 'https://www.mskglobaltrade.com';
 }
 
 export const SITE_NAME = 'MSK Global Trade';
@@ -20,7 +20,12 @@ export const BRAND = {
   logoPath: '/og-image.jpg',
   phone: '+919232091060',
   email: 'mskglobal26@gmail.com',
-  sameAs: [] as string[],
+  /** Registered office / correspondence (Contact page, schema). */
+  officeAddressLine: 'Vijaynagar, Indore, 452010, M.P.',
+  sameAs: [
+    'https://www.linkedin.com/in/msk-global-trade-1987123ba',
+    'https://www.instagram.com/mskglobal26',
+  ] as string[],
   areaServed: ['India', 'United Arab Emirates', 'Worldwide'] as const,
 };
 
