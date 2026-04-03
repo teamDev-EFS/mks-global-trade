@@ -11,7 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import productImageOnion from '../../assets/Onion.webp';
+import productImageOnion from "../../assets/Onion.webp";
 
 /* ── Carousel slides — agriculture, export, spices, logistics ── */
 const SLIDES = [
@@ -31,7 +31,7 @@ const SLIDES = [
     src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=85",
     alt: "Shipping containers at international port for global agricultural trade",
     caption: "Global Logistics Network",
-    sub: "Reliable delivery to 50+ countries",
+    sub: "Reliable delivery to 3+ countries",
   },
   {
     src: productImageOnion,
@@ -305,10 +305,11 @@ const HeroSection: React.FC = () => {
                         type="button"
                         onClick={() => goTo(i)}
                         aria-label={`Go to slide ${i + 1}`}
-                        className={`h-1.5 rounded-full transition-all duration-500 ${i === current
-                          ? "w-6 bg-emerald-400"
-                          : "w-1.5 bg-white/20 hover:bg-white/40"
-                          }`}
+                        className={`h-1.5 rounded-full transition-all duration-500 ${
+                          i === current
+                            ? "w-6 bg-emerald-400"
+                            : "w-1.5 bg-white/20 hover:bg-white/40"
+                        }`}
                       />
                     ))}
                   </div>
