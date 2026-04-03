@@ -24,7 +24,7 @@ const SLIDES = [
   {
     src: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=85",
     alt: "Colorful Indian spices in market showcasing export-grade spice varieties",
-    caption: "Export-Grade Indian Spices",
+    caption: "Export-Grade Indian Spices ",
     sub: "Aromatic, lab-tested, globally certified",
   },
   {
@@ -305,11 +305,10 @@ const HeroSection: React.FC = () => {
                         type="button"
                         onClick={() => goTo(i)}
                         aria-label={`Go to slide ${i + 1}`}
-                        className={`h-1.5 rounded-full transition-all duration-500 ${
-                          i === current
+                        className={`h-1.5 rounded-full transition-all duration-500 ${i === current
                             ? "w-6 bg-emerald-400"
                             : "w-1.5 bg-white/20 hover:bg-white/40"
-                        }`}
+                          }`}
                       />
                     ))}
                   </div>
