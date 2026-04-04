@@ -22,10 +22,11 @@
 # Vite inlines VITE_* at build time — redeploy after any change.
 # -----------------------------------------------------------------------------
 
-# Proxy /api/* requests to the Vercel backend — avoids CORS issues in production
+# Proxy /api/* requests to Render backend — avoids CORS issues in production
+# IMPORTANT: Update the URL below after creating the Render service
 [[redirects]]
   from = "/api/*"
-  to = "https://msk-global-trade-backend.vercel.app/api/:splat"
+  to = "https://mks-global-trade-api.onrender.com/api/:splat"
   status = 200
   force = true
 
