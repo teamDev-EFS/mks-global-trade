@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import { OrganizationJsonLd, WebSiteJsonLd } from '../seo/JsonLd';
+import { OrganizationJsonLd, WebSiteJsonLd, LocalBusinessJsonLd } from '../seo/JsonLd';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -17,6 +17,7 @@ const Layout: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-white">
       <OrganizationJsonLd />
       <WebSiteJsonLd />
+      <LocalBusinessJsonLd />
       <ScrollToTop />
       <Navbar />
       <main className="flex-grow">

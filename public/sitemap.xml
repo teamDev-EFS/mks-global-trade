@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://msk-global-trade.example.com/</loc><changefreq>weekly</changefreq><priority>1</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://msk-global-trade.example.com/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://msk-global-trade.example.com/services/export-solutions</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://msk-global-trade.example.com/services/core-services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://msk-global-trade.example.com/services/regions</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://msk-global-trade.example.com/services/export-process</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://msk-global-trade.example.com/services/why-services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://msk-global-trade.example.com/services/services-cta</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://msk-global-trade.example.com/about</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://msk-global-trade.example.com/contact</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://msk-global-trade.example.com/insights</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://msk-global-trade.example.com/insights/benefits-of-organic-farming</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://msk-global-trade.example.com/insights/export-process-from-india</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://msk-global-trade.example.com/insights/global-demand-indian-spices</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/vermicompost</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/jaggery</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/jaggery-powder</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/onion</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/coriander</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/fullers-earth</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/red-chilli</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/seasonal-products</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/beetroot</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://msk-global-trade.example.com/products/carrot</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <!-- Main pages -->
+  <url><loc>https://www.mskglobaltrade.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/about</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/contact</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/insights</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+
+  <!-- Service sub-pages -->
+  <url><loc>https://www.mskglobaltrade.com/services/export-solutions</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/services/core-services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/services/regions</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/services/export-process</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/services/why-services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Product pages -->
+  <url><loc>https://www.mskglobaltrade.com/products/vermicompost</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/jaggery</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/jaggery-powder</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/onion</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/coriander</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/fullers-earth</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/red-chilli</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/seasonal-products</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/beetroot</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/carrot</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/products/soya-bean</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+
+  <!-- Insight articles -->
+  <url><loc>https://www.mskglobaltrade.com/insights/benefits-of-organic-farming</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/insights/export-process-from-india</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mskglobaltrade.com/insights/global-demand-indian-spices</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

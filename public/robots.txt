@@ -5,4 +5,5 @@ Allow: /
 # Admin UI is client-side only; do not rely on robots for security.
 Disallow: /admin/
 
-Sitemap: https://msk-global-trade.example.com/sitemap.xml
+# Sitemaps
+Sitemap: https://www.mskglobaltrade.com/sitemap.xml

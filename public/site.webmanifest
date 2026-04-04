@@ -1,12 +1,14 @@
 {
-  "name": "MSK Global Trade",
+  "name": "MSK Global Trade — Premium Agricultural Exports",
   "short_name": "MSK Trade",
-  "description": "Premium agricultural exports from India to UAE and global markets.",
+  "description": "Trusted exporter of premium Indian agricultural products — vermicompost, spices, jaggery & bulk commodities to 50+ countries.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#065f46",
+  "background_color": "#FAF7F2",
+  "theme_color": "#0F3D2E",
   "lang": "en",
+  "categories": ["business", "food"],
   "icons": [
     {
       "src": "/og-image.jpg",

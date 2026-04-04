@@ -10,85 +10,82 @@ export type PageSeoPayload = {
 
 type StaticPageKey = 'home' | 'products' | 'services' | 'about' | 'contact' | 'insights';
 
-const STATIC: Record<StaticPageKey, Omit<PageSeoPayload, 'path'> & { path: string }> = {
+const STATIC: Record<StaticPageKey, PageSeoPayload> = {
   home: {
     path: '/',
-    title: 'MSK Global Trade | India to UAE & Global Agricultural Exports',
+    title: 'MSK Global Trade | Premium Agricultural Exports from India to UAE & 50+ Countries',
     description:
-      'Premium agro exports from India: organic vermicompost, spices, jaggery, vegetables & bulk supply. Trusted partner for UAE, GCC & worldwide buyers with quality & logistics.',
+      'MSK Global Trade exports premium organic vermicompost, Indian spices, jaggery, fresh vegetables and bulk agricultural products from India to UAE, GCC, and 50+ countries. Direct farm sourcing, export-grade quality control, competitive bulk pricing, and reliable international logistics.',
     keywords:
-      'agricultural export India, UAE agro supplier, vermicompost exporter India, organic spices export, bulk jaggery supplier, MSK Global Trade, India to global export',
+      'agricultural export India, vermicompost exporter India, Indian spices supplier UAE, bulk jaggery exporter, organic farming products India, MSK Global Trade, India to UAE export, GCC agricultural supplier, premium agro exports, bulk commodity supplier India',
   },
   products: {
     path: '/products',
-    title: 'Export Products | Vermicompost, Spices & Agro Commodities | MSK Global Trade',
+    title: 'Export Products — Vermicompost, Spices, Jaggery & Agro Commodities | MSK Global Trade',
     description:
-      'Browse export-grade vermicompost, Indian spices, jaggery, fresh produce & minerals. Bulk supply from India to UAE, Middle East & global markets.',
+      'Browse MSK Global Trade export product catalogue: organic vermicompost fertilizer, premium Indian spices (coriander, red chilli), natural jaggery, fresh onions, beetroot, carrots, soya beans & fuller\'s earth. Bulk supply from India to UAE, Middle East & worldwide.',
     keywords:
-      'vermicompost exporter India, bulk spices export, jaggery powder supplier UAE, organic agro products India, export catalogue MSK Global Trade',
+      'vermicompost exporter India, bulk Indian spices export, jaggery powder supplier UAE, organic agro products, coriander seeds exporter, red chilli powder export India, fresh vegetables export, MSK Global Trade products, onion exporter India',
   },
   services: {
     path: '/services',
-    title: 'Export Services & Logistics | India → UAE → Global | MSK Global Trade',
+    title: 'Agricultural Export Services & Logistics — India to UAE & Global | MSK Global Trade',
     description:
-      'Sourcing, quality assurance, packaging & global export management for agro products. India sourcing, UAE coordination, and worldwide delivery.',
+      'MSK Global Trade provides end-to-end agricultural export services: product sourcing from Indian farms, quality assurance & lab testing, hygienic export-standard packaging, customs documentation, and international shipping to UAE, GCC, Europe, Africa & Asia-Pacific.',
     keywords:
-      'export logistics India, bulk supply UAE, agricultural sourcing India, international trade services, MSK Global Trade export services',
+      'agricultural export services India, bulk supply logistics UAE, product sourcing India, international trade services, export documentation India, MSK Global Trade services, quality assurance agro exports',
   },
   about: {
     path: '/about',
-    title: 'About MSK Global Trade | Organic Agriculture & Global Export Partner',
+    title: 'About MSK Global Trade — Trusted Indian Agricultural Export Company Since 2016',
     description:
-      'MSK Global Trade connects Indian farmers with global buyers. Vision, mission, leadership & commitment to sustainable agriculture and export excellence.',
+      'MSK Global Trade Pvt Ltd is a leading Indian agricultural export company based in Indore, Madhya Pradesh. We connect Indian farmers with international buyers across 50+ countries, exporting organic vermicompost, spices, jaggery and fresh produce with a focus on quality, sustainability and fair trade.',
     keywords:
-      'MSK Global Trade about, India export company, organic agriculture exporter, sustainable agro trade, global supply partner',
+      'MSK Global Trade about, Indian agricultural export company, Indore exporter, organic agriculture exporter India, sustainable farming exports, trusted global trade partner',
   },
   contact: {
     path: '/contact',
-    title: 'Contact | Bulk Export Enquiries | India & UAE | MSK Global Trade',
+    title: 'Contact MSK Global Trade — Bulk Export Enquiries | India & UAE',
     description:
-      'Contact MSK Global Trade for bulk export quotes, product specs & shipping to UAE, GCC & worldwide. WhatsApp & email enquiries welcome.',
+      'Contact MSK Global Trade for bulk agricultural export quotes, product specifications, and international shipping enquiries. Phone: +91 92320 91060. Email: mskglobal26@gmail.com. Based in Indore, India — serving UAE, GCC & worldwide buyers.',
     keywords:
-      'contact agricultural exporter India, UAE import enquiry, bulk export quote MSK Global Trade, WhatsApp agro supplier',
+      'contact MSK Global Trade, agricultural export enquiry India, bulk export quote, WhatsApp agro supplier India, import agricultural products India, MSK Global Trade phone email',
   },
   insights: {
     path: '/insights',
-    title: 'Insights | Organic Farming & Export from India | MSK Global Trade',
+    title: 'Insights & Articles — Organic Farming, Indian Exports & Agricultural Trade | MSK Global Trade',
     description:
-      'Articles on organic farming, India export process, global demand for Indian spices & agro commodities — from MSK Global Trade.',
+      'Expert articles on organic farming in India, agricultural export processes, global demand for Indian spices, vermicompost benefits, and international trade trends — by MSK Global Trade.',
     keywords:
-      'organic farming India, export process India, Indian spices global demand, agricultural trade insights, MSK Global Trade blog',
+      'organic farming India articles, agricultural export process India, Indian spices global demand, vermicompost benefits, export trade insights, MSK Global Trade blog',
   },
 };
 
 export function getStaticPageMeta(key: StaticPageKey): PageSeoPayload {
-  const s = STATIC[key];
-  return { title: s.title, description: s.description, keywords: s.keywords, path: s.path };
+  return { ...STATIC[key] };
 }
 
 export function buildProductMeta(product: Product): PageSeoPayload {
   const slug = product.slug;
-  const title = `Premium ${product.name} Exporter from India | MSK Global Trade`;
-  const body = `${product.shortDescription} ${product.category}. Export-quality supply from India to UAE, GCC & global markets. Enquire for bulk export.`;
-  const description = body.length > 160 ? `${body.slice(0, 157).trim()}…` : body;
+  const title = `${product.name} Exporter from India — Premium Export Quality | MSK Global Trade`;
+  const markets = product.exportMarkets?.join(', ') || 'UAE, GCC & global markets';
+  const description = `Buy export-grade ${product.name} from India. ${product.shortDescription} Available in bulk for ${markets}. ${product.packing}. Enquire now for competitive pricing and reliable supply from MSK Global Trade.`;
+  const trimmedDesc = description.length > 300 ? `${description.slice(0, 297).trim()}…` : description;
   const keywords = [
     `${product.name.toLowerCase()} exporter India`,
     `${product.name.toLowerCase()} supplier UAE`,
+    `buy ${product.name.toLowerCase()} bulk`,
+    `${product.name.toLowerCase()} export price`,
     bulkKeywordFor(product),
-    `${product.category} export India`,
+    `${product.category.toLowerCase()} export India`,
     'MSK Global Trade',
   ].join(', ');
-  return {
-    title,
-    description,
-    keywords,
-    path: `/products/${slug}`,
-  };
+  return { title, description: trimmedDesc, keywords, path: `/products/${slug}` };
 }
 
 /** Descriptive alt text for product imagery (image SEO). */
 export function productImageAlt(product: Product): string {
-  return `Export quality ${product.name} from India — bulk supply for UAE, GCC & global markets | MSK Global Trade`;
+  return `Export-quality ${product.name} from India — bulk supply for UAE, GCC & international markets | MSK Global Trade`;
 }
 
 export function buildInsightMeta(post: InsightPost): PageSeoPayload {
@@ -102,10 +99,12 @@ export function buildInsightMeta(post: InsightPost): PageSeoPayload {
 
 function bulkKeywordFor(product: Product): string {
   const n = product.name.toLowerCase();
-  if (n.includes('vermicompost')) return 'vermicompost exporter from India bulk';
-  if (n.includes('jaggery')) return 'bulk jaggery powder supplier UAE';
+  if (n.includes('vermicompost')) return 'organic vermicompost exporter India bulk supply';
+  if (n.includes('jaggery')) return 'natural jaggery powder supplier India UAE';
   if (n.includes('spice') || n.includes('chilli') || n.includes('coriander')) {
-    return 'organic spices export India';
+    return 'premium Indian spices export wholesale';
   }
-  return 'bulk agricultural export India';
+  if (n.includes('onion')) return 'fresh onion exporter India wholesale';
+  if (n.includes('soya') || n.includes('soy')) return 'soya bean exporter India bulk';
+  return 'bulk agricultural commodity export India';
 }
