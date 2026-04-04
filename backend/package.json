@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "node --watch src/server.js",
+    "build": "echo 'No build step required'",
     "start": "node src/server.js",
     "seed": "node src/seed/seed.js",
     "create-admin": "node src/seed/createAdmin.js"
