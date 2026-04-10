@@ -22,6 +22,14 @@
 # Vite inlines VITE_* at build time — redeploy after any change.
 # -----------------------------------------------------------------------------
 
+# Single canonical host: apex → www (stops duplicate URLs and weak Google snippets)
+[[redirects]]
+  from = "/*"
+  to = "https://www.mskglobaltrade.com/:splat"
+  status = 301
+  force = true
+  conditions = {Host = ["mskglobaltrade.com"]}
+
 # Proxy /api/* requests to Render backend — avoids CORS issues in production
 # IMPORTANT: Update the URL below after creating the Render service
 [[redirects]]

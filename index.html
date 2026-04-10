@@ -41,6 +41,15 @@
   <link rel="alternate" hreflang="en" href="https://www.mskglobaltrade.com/">
   <link rel="alternate" hreflang="en-in" href="https://www.mskglobaltrade.com/">
   <link rel="alternate" hreflang="x-default" href="https://www.mskglobaltrade.com/">
+  <meta name="application-name" content="MSK Global Trade">
+
+  <!-- Static structured data (available before JS; helps Google/Bing snippets) -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"Organization","@id":"https://www.mskglobaltrade.com/#organization","name":"MSK Global Trade","legalName":"MSK Global Trade Pvt Ltd","url":"https://www.mskglobaltrade.com/","logo":{"@type":"ImageObject","url":"https://www.mskglobaltrade.com/og-image.jpg"},"description":"Trusted exporter of premium agricultural products from India — organic vermicompost, spices, jaggery, and bulk commodities for UAE, GCC, and global markets.","address":{"@type":"PostalAddress","streetAddress":"Vijaynagar","addressLocality":"Indore","addressRegion":"Madhya Pradesh","postalCode":"452010","addressCountry":"IN"},"sameAs":["https://www.linkedin.com/in/msk-global-trade-1987123ba","https://www.instagram.com/mskglobal26"]},
+    {"@type":"WebSite","@id":"https://www.mskglobaltrade.com/#website","url":"https://www.mskglobaltrade.com/","name":"MSK Global Trade","description":"Premium agricultural exports from India to UAE, GCC, and worldwide.","inLanguage":"en-IN","publisher":{"@id":"https://www.mskglobaltrade.com/#organization"}}
+  ]}
+  </script>
 
   <!-- Theme & Icons -->
   <meta name="theme-color" content="#0F3D2E">
@@ -61,12 +70,56 @@
   <link rel="stylesheet" href="/src/index.css">
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <!-- Pre-rendered SEO content — visible to crawlers immediately, replaced by React on mount -->
+    <header style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">
+      <h1>MSK Global Trade — Premium Agricultural Exports from India to UAE, GCC &amp; Worldwide</h1>
+      <p>
+        MSK Global Trade Pvt Ltd is a leading Indian agricultural export company headquartered in
+        Indore, Madhya Pradesh. We specialize in exporting premium quality organic vermicompost,
+        Indian spices (coriander, red chilli, turmeric), natural jaggery, fresh vegetables (onion,
+        beetroot, carrot), soya beans, and fuller's earth from India to the United Arab Emirates,
+        Saudi Arabia, Qatar, Oman, Kuwait, Bahrain, and over 50 countries across the GCC, Europe,
+        Africa, and Asia-Pacific regions.
+      </p>
+      <h2>What We Export</h2>
+      <ul>
+        <li>Organic Vermicompost — 100% natural, lab-tested fertilizer for sustainable agriculture</li>
+        <li>Indian Spices — coriander seeds, red chilli powder, turmeric, premium export grade</li>
+        <li>Natural Jaggery — chemical-free, traditional Indian sweetener in various forms</li>
+        <li>Fresh Vegetables — onion, beetroot, carrot, export-quality bulk supply</li>
+        <li>Soya Bean — high-protein, non-GMO, bulk export</li>
+        <li>Fuller's Earth — industrial and cosmetic grade clay</li>
+      </ul>
+      <h2>Why Choose MSK Global Trade</h2>
+      <ul>
+        <li>Direct sourcing from trusted Indian farmers</li>
+        <li>Export-grade quality control and lab testing</li>
+        <li>Hygienic processing and international standard packaging</li>
+        <li>Custom labeling and bulk supply capability</li>
+        <li>Reliable global logistics and timely delivery</li>
+        <li>Competitive pricing with long-term partnership focus</li>
+      </ul>
+      <h2>Contact MSK Global Trade</h2>
+      <address>
+        MSK Global Trade Pvt Ltd<br>
+        Vijaynagar, Indore, Madhya Pradesh 452010, India<br>
+        Phone: <a href="tel:+919232091060">+91 92320 91060</a><br>
+        Email: <a href="mailto:mskglobal26@gmail.com">mskglobal26@gmail.com</a>
+      </address>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/services">Services</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/insights">Insights</a>
+      </nav>
+    </header>
+  </div>
   <noscript>
-    <h1>MSK Global Trade — Premium Agricultural Exports from India</h1>
-    <p>MSK Global Trade is a trusted exporter of organic vermicompost, Indian spices, jaggery, and bulk agricultural products from India to UAE, GCC, and 50+ countries worldwide.</p>
-    <p>Contact us: +91 92320 91060 | mskglobal26@gmail.com</p>
-    <p>Visit our website with JavaScript enabled for the full experience.</p>
+    <style>header{position:static!important;width:auto!important;height:auto!important;clip:auto!important;margin:0!important;padding:1rem!important;font-family:system-ui,sans-serif}</style>
+    <p><strong>Note:</strong> JavaScript is required for the interactive experience. Please enable JavaScript in your browser.</p>
   </noscript>
   <script type="module" src="/src/main.tsx"></script>
 </body>
