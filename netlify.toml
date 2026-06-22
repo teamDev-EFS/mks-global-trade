@@ -33,7 +33,7 @@
 # Proxy /api/* requests to Railway backend — avoids CORS issues in production
 [[redirects]]
   from = "/api/*"
-  to = "https://mks-global-trade-api-production.up.railway.app:8080/api/:splat"
+  to = "https://mks-global-trade-api-production.up.railway.app/api/:splat"
   status = 200
   force = true
 
