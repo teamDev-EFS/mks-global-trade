@@ -30,11 +30,13 @@
   force = true
   conditions = {Host = ["mskglobaltrade.com"]}
 
-# Proxy /api/* requests to Render backend — avoids CORS issues in production
-# IMPORTANT: Update the URL below after creating the Render service
+# Proxy /api/* requests to Railway backend — avoids CORS issues in production
+# IMPORTANT: Replace YOUR_RAILWAY_BACKEND_URL with your actual Railway deployment URL
+# Get it from: Railway Dashboard → mks-global-trade → Deployments → Public Domain
+# Example: https://mks-global-trade-backend-production.up.railway.app
 [[redirects]]
   from = "/api/*"
-  to = "https://mks-global-trade.onrender.com/api/:splat"
+  to = "https://YOUR_RAILWAY_BACKEND_URL/api/:splat"
   status = 200
   force = true
 
