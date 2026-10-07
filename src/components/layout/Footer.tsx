@@ -19,7 +19,8 @@ const navCols = [
       { to: '/products', label: 'All Products' },
       { to: '/products/vermicompost', label: 'Vermicompost' },
       { to: '/products/jaggery', label: 'Jaggery' },
-      { to: '/products/indian-spices', label: 'Indian Spices' },
+      { to: '/products/dehydrated-white-onion-flakes', label: 'Dehydrated Onion' },
+      { to: '/products/dehydrated-garlic-flakes', label: 'Dehydrated Garlic' },
     ],
   },
 ];
@@ -131,7 +132,7 @@ const Footer: React.FC = () => {
                 </div>
                 <div>
                   <div className="text-xs text-emerald-400/50 font-medium mb-0.5">Location</div>
-                  <span className="text-emerald-100/80">India</span>
+                  <address className="not-italic text-emerald-100/80 leading-relaxed">Depalpur, Indore,<br />Madhya Pradesh 453115, India</address>
                 </div>
               </li>
             </ul>

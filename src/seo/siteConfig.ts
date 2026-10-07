@@ -21,7 +21,7 @@ export const BRAND = {
   phone: '+919232091060',
   email: 'mskglobal26@gmail.com',
   /** Registered office / correspondence (Contact page, schema). */
-  officeAddressLine: 'Vijaynagar, Indore, 452010, M.P.',
+  officeAddressLine: 'Depalpur, Indore, Madhya Pradesh, 453115, India',
   sameAs: [
     'https://www.linkedin.com/in/msk-global-trade-1987123ba',
     'https://www.instagram.com/mskglobal26',

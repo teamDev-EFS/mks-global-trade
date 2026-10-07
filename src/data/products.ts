@@ -1,8 +1,128 @@
 import { Product } from '../types';
 import productImageJaggery from '../assets/Jaggery.jpeg';
 import productImageOnion from '../assets/Onion.webp';
+import imgWhiteOnionFlakes from '../assets/white_onion_flakes_card.jpg';
+import imgWhiteOnionPowder from '../assets/white_onion_powder_card.jpg';
+import imgPinkOnion from '../assets/pink_onion_card.jpg';
+import imgDriedGarlic from '../assets/Dried_garlic_card.jpg';
+import imgGarlicPowder from '../assets/Garlic_powder_card.jpg';
 
 export const products: Product[] = [
+  {
+    id: '10',
+    slug: 'dehydrated-white-onion-flakes',
+    slugAliases: ['white-onion-flakes', 'dehydrated-onion-flakes'],
+    name: 'Dehydrated White Onion Flakes',
+    category: 'Dehydrated Products',
+    variants: ['Flakes', 'Chopped', 'Minced'],
+    shortDescription: 'Hygienically dried white onion flakes with strong flavour and long shelf life.',
+    highlights: [
+      'Uniform, clean white flakes',
+      'Strong natural pungency and aroma',
+      'Ideal for soups, sauces and seasonings',
+    ],
+    tags: ['Dehydrated', 'Export Quality', 'Bulk Supply'],
+    packing: '10kg / 20kg / 25kg bags',
+    exportMarkets: ['India', 'UAE', 'Global Export'],
+    availability: 'In Stock',
+    image: imgWhiteOnionFlakes,
+    featured: true,
+    inquiryPriority: 1,
+    description:
+      'Our dehydrated white onion flakes are made from carefully selected onions that are washed, sliced and dried under hygienic conditions. They retain natural flavour and aroma, rehydrate quickly and suit food processors, seasoning blenders and instant-food manufacturers. Available in bulk with custom packing.',
+  },
+  {
+    id: '11',
+    slug: 'dehydrated-white-onion-powder',
+    slugAliases: ['white-onion-powder', 'onion-powder'],
+    name: 'Dehydrated White Onion Powder',
+    category: 'Dehydrated Products',
+    variants: ['Fine Powder', 'Granules'],
+    shortDescription: 'Finely ground white onion powder, free-flowing with consistent flavour.',
+    highlights: [
+      'Made from 100% dehydrated white onions',
+      'Free-flowing, fine and uniform',
+      'Suitable for spice blends and ready meals',
+    ],
+    tags: ['Dehydrated', 'Free Flowing', 'Export Quality'],
+    packing: '10kg / 20kg / 25kg bags',
+    exportMarkets: ['India', 'UAE', 'Global Export'],
+    availability: 'In Stock',
+    image: imgWhiteOnionPowder,
+    featured: false,
+    inquiryPriority: 2,
+    description:
+      'Dehydrated white onion powder is produced by grinding dried white onion flakes into a fine, uniform powder. It delivers consistent flavour and colour, making it a staple for spice blends, snacks, sauces and ready-to-cook foods. Supplied in bulk for domestic and export buyers.',
+  },
+  {
+    id: '12',
+    slug: 'dehydrated-pink-onion-flakes-powder',
+    slugAliases: ['pink-onion-flakes', 'pink-onion-powder', 'red-onion-flakes'],
+    name: 'Dehydrated Pink Onion Flakes & Powder',
+    category: 'Dehydrated Products',
+    variants: ['Flakes', 'Powder'],
+    shortDescription: 'Dehydrated pink (red) onion flakes and powder with rich colour and bold taste.',
+    highlights: [
+      'Rich natural colour and bold flavour',
+      'Available as flakes and powder',
+      'Hygienically processed for export',
+    ],
+    tags: ['Dehydrated', 'Rich Flavour', 'Bulk Supply'],
+    packing: '10kg / 20kg / 25kg bags',
+    exportMarkets: ['India', 'UAE', 'Global Export'],
+    availability: 'In Stock',
+    image: imgPinkOnion,
+    featured: true,
+    inquiryPriority: 3,
+    description:
+      'Pink onion flakes and powder are produced from selected red onions that are cleaned, sliced and dehydrated under controlled conditions. Their pronounced taste and colour suit seasonings, snacks, sauces and ethnic food preparations. Both flakes and powder are available in bulk packing.',
+  },
+  {
+    id: '13',
+    slug: 'dehydrated-garlic-flakes',
+    slugAliases: ['dried-garlic', 'dehydrated-garlic'],
+    name: 'Dehydrated Garlic',
+    category: 'Dehydrated Products',
+    variants: ['Flakes', 'Cloves', 'Granules'],
+    shortDescription: 'Dehydrated garlic with intense aroma, processed hygienically for long shelf life.',
+    highlights: [
+      'Intense natural garlic aroma',
+      'Cleanly processed, long shelf life',
+      'Suitable for food processing and seasonings',
+    ],
+    tags: ['Dehydrated', 'Aromatic', 'Export Quality'],
+    packing: '10kg / 20kg / 25kg bags',
+    exportMarkets: ['India', 'UAE', 'Global Export'],
+    availability: 'In Stock',
+    image: imgDriedGarlic,
+    featured: true,
+    inquiryPriority: 4,
+    description:
+      'Our dehydrated garlic is prepared from fresh, high-quality garlic cloves that are peeled, cleaned and dried to preserve aroma and pungency. It is widely used in food processing, masalas, sauces and ready meals, and is available in bulk with custom packing for export.',
+  },
+  {
+    id: '14',
+    slug: 'garlic-powder',
+    slugAliases: ['dehydrated-garlic-powder'],
+    name: 'Garlic Powder',
+    category: 'Dehydrated Products',
+    variants: ['Fine Powder', 'Granules'],
+    shortDescription: 'Fine, free-flowing garlic powder with strong aroma and consistent quality.',
+    highlights: [
+      'Ground from dehydrated garlic',
+      'Strong flavour, fine uniform texture',
+      'Ideal for spice blends and food industry',
+    ],
+    tags: ['Dehydrated', 'Free Flowing', 'Bulk Supply'],
+    packing: '10kg / 20kg / 25kg bags',
+    exportMarkets: ['India', 'UAE', 'Global Export'],
+    availability: 'In Stock',
+    image: imgGarlicPowder,
+    featured: true,
+    inquiryPriority: 5,
+    description:
+      'Garlic powder is made by grinding dehydrated garlic into a fine, uniform powder with strong aroma and taste. A key ingredient for spice mixes, marinades, sauces, snacks and instant foods, supplied in bulk for food manufacturers and importers.',
+  },
   {
     id: '1',
     slug: 'vermicompost',
@@ -22,7 +142,7 @@ export const products: Product[] = [
     image:
       'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=400&fit=crop',
     featured: true,
-    inquiryPriority: 1,
+    inquiryPriority: 6,
     description:
       'Vermicompost is a 100% organic fertilizer that improves soil fertility and is rich in NPK nutrients. Ideal for sustainable agriculture and export.',
   },
@@ -45,7 +165,7 @@ export const products: Product[] = [
     availability: 'In Stock',
     image: productImageJaggery,
     featured: true,
-    inquiryPriority: 2,
+    inquiryPriority: 7,
     description:
       'Jaggery is a natural sweetener available in solid, cube, and powder forms. It is chemical-free, rich in minerals and iron, and suitable for the food industry.',
   },
@@ -66,8 +186,8 @@ export const products: Product[] = [
     exportMarkets: ['India', 'UAE', 'Global Export'],
     availability: 'In Stock',
     image: productImageOnion,
-    featured: true,
-    inquiryPriority: 3,
+    featured: false,
+    inquiryPriority: 8,
     description:
       'Our export-quality onions are available in multiple sizes and have a long shelf life, making them ideal for food processing and international supply.',
   },
@@ -89,8 +209,8 @@ export const products: Product[] = [
     availability: 'In Stock',
     image:
       'https://images.unsplash.com/photo-1528613526328-8c19bd037322?w=600&h=400&fit=crop',
-    featured: true,
-    inquiryPriority: 4,
+    featured: false,
+    inquiryPriority: 9,
     description:
       'Coriander is available as premium quality seeds and hygienically processed powder. Known for its strong aroma and flavor, suitable for export.',
   },
@@ -112,8 +232,8 @@ export const products: Product[] = [
     availability: 'In Stock',
     image:
       'https://images.unsplash.com/photo-1704650311263-4563a029bd9e?w=600&h=400&fit=crop',
-    featured: true,
-    inquiryPriority: 5,
+    featured: false,
+    inquiryPriority: 10,
     description:
       'Fuller’s Earth is a natural clay with high absorbent quality, used in skincare and industrial applications. Available in various sizes for export.',
   },
@@ -136,7 +256,7 @@ export const products: Product[] = [
     image:
       'https://images.unsplash.com/photo-1601876818790-33a0783ec542?w=600&h=400&fit=crop',
     featured: false,
-    inquiryPriority: 6,
+    inquiryPriority: 11,
     description:
       'Red Chilli is available as powder and flakes, processed hygienically for food industry use and export. Rich in color and flavor.',
   },
@@ -159,7 +279,7 @@ export const products: Product[] = [
     image:
       'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=400&fit=crop',
     featured: false,
-    inquiryPriority: 7,
+    inquiryPriority: 12,
     description:
       'Our seasonal food products include fresh fruits and vegetables, available based on seasonal availability and suitable for export orders.',
   },
@@ -182,7 +302,7 @@ export const products: Product[] = [
     image:
       'https://images.unsplash.com/photo-1639402480805-ea8ef529e028?w=600&h=400&fit=crop',
     featured: false,
-    inquiryPriority: 8,
+    inquiryPriority: 13,
     description:
       'Beetroot is fresh and nutrient-rich, suitable for bulk export and international supply. Available in bulk packing.',
   },
@@ -205,7 +325,7 @@ export const products: Product[] = [
     image:
       'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=600&h=400&fit=crop',
     featured: false,
-    inquiryPriority: 9,
+    inquiryPriority: 14,
     description:
       'Carrots are export-grade, fresh, and crunchy, rich in vitamins, and suitable for international supply in bulk.',
   },

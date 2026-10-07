@@ -6,7 +6,7 @@ import { products } from '../../data/products';
 import { productImageAlt } from '../../seo/pageMeta';
 
 const FeaturedProducts: React.FC = () => {
-  const featured = products.slice(0, 6);
+  const featured = products.filter((p) => p.featured).slice(0, 6);
 
   return (
     <section

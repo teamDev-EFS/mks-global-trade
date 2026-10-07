@@ -21,11 +21,11 @@ const STATIC: Record<StaticPageKey, PageSeoPayload> = {
   },
   products: {
     path: '/products',
-    title: 'Export Products — Vermicompost, Spices, Jaggery & Agro Commodities | MSK Global Trade',
+    title: 'Export Products — Dehydrated Onion & Garlic, Vermicompost, Spices, Jaggery | MSK Global Trade',
     description:
-      'Browse MSK Global Trade export product catalogue: organic vermicompost fertilizer, premium Indian spices (coriander, red chilli), natural jaggery, fresh onions, beetroot, carrots, soya beans & fuller\'s earth. Bulk supply from India to UAE, Middle East & worldwide.',
+      'Browse MSK Global Trade export product catalogue: dehydrated white & pink onion flakes and powder, dehydrated garlic and garlic powder, organic vermicompost fertilizer, premium Indian spices (coriander, red chilli), natural jaggery, fresh onions, beetroot, carrots, soya beans & fuller\'s earth. Bulk supply from India to UAE, Middle East & worldwide.',
     keywords:
-      'vermicompost exporter India, bulk Indian spices export, jaggery powder supplier UAE, organic agro products, coriander seeds exporter, red chilli powder export India, fresh vegetables export, MSK Global Trade products, onion exporter India',
+      'dehydrated onion flakes exporter India, dehydrated garlic powder supplier, vermicompost exporter India, bulk Indian spices export, jaggery powder supplier UAE, organic agro products, coriander seeds exporter, red chilli powder export India, fresh vegetables export, MSK Global Trade products, onion exporter India',
   },
   services: {
     path: '/services',
@@ -104,6 +104,10 @@ function bulkKeywordFor(product: Product): string {
   if (n.includes('spice') || n.includes('chilli') || n.includes('coriander')) {
     return 'premium Indian spices export wholesale';
   }
+  if (n.includes('dehydrated') || n.includes('powder') || n.includes('flakes')) {
+    return 'dehydrated onion garlic flakes powder exporter India';
+  }
+  if (n.includes('garlic')) return 'dehydrated garlic exporter India bulk';
   if (n.includes('onion')) return 'fresh onion exporter India wholesale';
   if (n.includes('soya') || n.includes('soy')) return 'soya bean exporter India bulk';
   return 'bulk agricultural commodity export India';

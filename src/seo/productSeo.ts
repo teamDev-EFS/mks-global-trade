@@ -14,7 +14,25 @@ const DEFAULT_FAQS: FaqItem[] = [
   },
 ];
 
+const DEHYDRATED_FAQS: FaqItem[] = [
+  {
+    question: 'Do you supply dehydrated onion and garlic in bulk?',
+    answer:
+      'Yes. We supply dehydrated onion flakes, onion powder, garlic and garlic powder in bulk with hygienic processing and export-grade packing for food manufacturers and importers worldwide.',
+  },
+  {
+    question: 'What packing options are available for dehydrated products?',
+    answer:
+      'Standard packing is 10kg, 20kg and 25kg bags. Custom packing and private labelling are available on request.',
+  },
+];
+
 const BY_SLUG: Record<string, FaqItem[]> = {
+  'dehydrated-white-onion-flakes': DEHYDRATED_FAQS,
+  'dehydrated-white-onion-powder': DEHYDRATED_FAQS,
+  'dehydrated-pink-onion-flakes-powder': DEHYDRATED_FAQS,
+  'dehydrated-garlic-flakes': DEHYDRATED_FAQS,
+  'garlic-powder': DEHYDRATED_FAQS,
   vermicompost: [
     {
       question: 'Do you export vermicompost in bulk?',
