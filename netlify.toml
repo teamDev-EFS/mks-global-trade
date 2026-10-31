@@ -3,11 +3,13 @@
 
 [build]
   # Install runs automatically (npm install). Then:
-  command = "npm run build"
+  command = "node scripts/netlify-build.mjs"
   # Vite output directory
   publish = "dist"
 
 [build.environment]
+  # Pause switch: set SITE_PAUSED=true in the Netlify UI (or uncomment below), then deploy.
+  # SITE_PAUSED = "true"
   NODE_VERSION = "20"
 
 # -----------------------------------------------------------------------------
